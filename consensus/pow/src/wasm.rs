@@ -1,13 +1,13 @@
 use js_sys::BigInt;
 use num::Float;
-use vecno_consensus_client::Header;
-use vecno_consensus_client::HeaderT;
-use vecno_consensus_core::hashing;
-use vecno_hashes::Hash;
-use vecno_hashes::PowHash;
-use vecno_math::Uint256;
-use vecno_utils::hex::FromHex;
-use vecno_utils::hex::ToHex;
+use kaspa_consensus_client::Header;
+use kaspa_consensus_client::HeaderT;
+use kaspa_consensus_core::hashing;
+use kaspa_hashes::Hash;
+use kaspa_hashes::PowHash;
+use kaspa_math::Uint256;
+use kaspa_utils::hex::FromHex;
+use kaspa_utils::hex::ToHex;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::TryCastFromJs;
 use workflow_wasm::error::Error;
@@ -22,7 +22,7 @@ extern "C" {
     pub type WorkT;
 }
 
-/// Represents a Vecno header PoW manager
+/// Represents a kaspa header PoW manager
 /// @category Mining
 #[wasm_bindgen(inspectable)]
 pub struct PoW {
@@ -95,11 +95,9 @@ impl PoW {
     }
 }
 
-// https://github.com/tmrlvi/vecno-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L36
 const DIFFICULTY_1_TARGET: (u64, i16) = (0xffffu64, 208); // 0xffff 2^208
 
 /// Calculates target from difficulty, based on set_difficulty function on
-/// <https://github.com/tmrlvi/vecno-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L375>
 /// @category Mining
 #[wasm_bindgen(js_name = calculateTarget)]
 pub fn calculate_target(difficulty: f32) -> Result<BigInt> {
