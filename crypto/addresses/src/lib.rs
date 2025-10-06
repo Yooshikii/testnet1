@@ -72,8 +72,6 @@ pub enum Prefix {
     Testnet,
     #[serde(rename = "kaspasim")]
     Simnet,
-    #[serde(rename = "kaspadev")]
-    Devnet,
     #[cfg(test)]
     A,
     #[cfg(test)]
@@ -86,7 +84,6 @@ impl Prefix {
             Prefix::Mainnet => "vecno",
             Prefix::Testnet => "kaspatest",
             Prefix::Simnet => "kaspasim",
-            Prefix::Devnet => "kaspadev",
             #[cfg(test)]
             Prefix::A => "a",
             #[cfg(test)]
@@ -117,7 +114,6 @@ impl TryFrom<&str> for Prefix {
             "vecno" => Ok(Prefix::Mainnet),
             "kaspatest" => Ok(Prefix::Testnet),
             "kaspasim" => Ok(Prefix::Simnet),
-            "kaspadev" => Ok(Prefix::Devnet),
             #[cfg(test)]
             "a" => Ok(Prefix::A),
             #[cfg(test)]

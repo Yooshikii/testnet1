@@ -64,13 +64,6 @@ static SIMNET_NETWORK_PARAMS: LazyLock<NetworkParams> = LazyLock::new(|| Network
     additional_compound_transaction_mass: 0,
 });
 
-static DEVNET_NETWORK_PARAMS: LazyLock<NetworkParams> = LazyLock::new(|| NetworkParams {
-    coinbase_transaction_maturity_period_daa: AtomicU64::new(100),
-    coinbase_transaction_stasis_period_daa: 50,
-    user_transaction_maturity_period_daa: AtomicU64::new(10),
-    additional_compound_transaction_mass: 0,
-});
-
 impl NetworkParams {
     pub fn from(value: NetworkId) -> &'static NetworkParams {
         match value.network_type {
@@ -80,7 +73,6 @@ impl NetworkParams {
                 Some(x) => panic!("Testnet suffix {} is not supported", x),
                 None => panic!("Testnet suffix not provided"),
             },
-            NetworkType::Devnet => &DEVNET_NETWORK_PARAMS,
             NetworkType::Simnet => &SIMNET_NETWORK_PARAMS,
         }
     }

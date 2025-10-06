@@ -13,7 +13,7 @@ use kaspa_consensus::{
         headers::HeaderStoreReader,
         relations::RelationsStoreReader,
     },
-    params::{ForkActivation, Params, TenBps, DEVNET_PARAMS, NETWORK_DELAY_BOUND, SIMNET_PARAMS},
+    params::{ForkActivation, Params, TenBps, NETWORK_DELAY_BOUND, SIMNET_PARAMS},
 };
 use kaspa_consensus_core::{
     api::ConsensusApi, block::Block, blockstatus::BlockStatus, config::bps::calculate_ghostdag_k, errors::block::BlockProcessResult,
@@ -192,7 +192,7 @@ fn main_impl(mut args: Args) {
         );
     }
     args.bps = if args.testnet11 { TenBps::bps() as f64 } else { args.bps };
-    let mut params = if args.testnet11 { SIMNET_PARAMS } else { DEVNET_PARAMS };
+    let mut params = SIMNET_PARAMS;
     params.crescendo_activation = ForkActivation::always();
     params.crescendo.coinbase_maturity = 200;
     params.storage_mass_parameter = 10_000;

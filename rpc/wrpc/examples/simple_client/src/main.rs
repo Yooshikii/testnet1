@@ -36,7 +36,7 @@ async fn check_node_status() -> Result<()> {
     let resolver = Some(Resolver::default());
 
     // Define the network your Kaspa node is connected to
-    // You can select NetworkType::Mainnet, NetworkType::Testnet, NetworkType::Devnet, NetworkType::Simnet
+    // You can select NetworkType::Mainnet, NetworkType::Testnet, NetworkType::Simnet
     let network_type = NetworkType::Mainnet;
     let selected_network = Some(NetworkId::new(network_type));
 

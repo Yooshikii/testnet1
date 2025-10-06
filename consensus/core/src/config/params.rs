@@ -1,7 +1,7 @@
 pub use super::{
     bps::{Bps, TenBps},
     constants::consensus::*,
-    genesis::{GenesisBlock, DEVNET_GENESIS, GENESIS, SIMNET_GENESIS, TESTNET11_GENESIS, TESTNET_GENESIS},
+    genesis::{GenesisBlock, GENESIS, SIMNET_GENESIS, TESTNET11_GENESIS, TESTNET_GENESIS},
 };
 use crate::{
     constants::STORAGE_MASS_PARAMETER,
@@ -446,7 +446,6 @@ impl From<NetworkType> for Params {
         match value {
             NetworkType::Mainnet => MAINNET_PARAMS,
             NetworkType::Testnet => TESTNET_PARAMS,
-            NetworkType::Devnet => DEVNET_PARAMS,
             NetworkType::Simnet => SIMNET_PARAMS,
         }
     }
@@ -461,7 +460,6 @@ impl From<NetworkId> for Params {
                 Some(x) => panic!("Testnet suffix {} is not supported", x),
                 None => panic!("Testnet suffix not provided"),
             },
-            NetworkType::Devnet => DEVNET_PARAMS,
             NetworkType::Simnet => SIMNET_PARAMS,
         }
     }
@@ -508,7 +506,7 @@ pub const MAINNET_PARAMS: Params = Params {
 };
 
 pub const TESTNET_PARAMS: Params = Params {
-    peers: &["89.162.126.80:7110","209.74.87.79:7110"
+    peers: &[
     ],
     net: NetworkId::with_suffix(NetworkType::Testnet, 10),
     genesis: TESTNET_GENESIS,
@@ -606,57 +604,4 @@ pub const SIMNET_PARAMS: Params = Params {
 
     crescendo: CRESCENDO,
     crescendo_activation: ForkActivation::always(),
-};
-
-pub const DEVNET_PARAMS: Params = Params {
-    peers: &[],
-    net: NetworkId::new(NetworkType::Devnet),
-    genesis: DEVNET_GENESIS,
-    prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
-    timestamp_deviation_tolerance: TIMESTAMP_DEVIATION_TOLERANCE,
-    prior_target_time_per_block: 1000,
-    max_difficulty_target: MAX_DIFFICULTY_TARGET,
-    max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
-    prior_difficulty_window_size: LEGACY_DIFFICULTY_WINDOW_SIZE,
-    min_difficulty_window_size: MIN_DIFFICULTY_WINDOW_SIZE,
-    prior_max_block_parents: 10,
-    prior_mergeset_size_limit: (LEGACY_DEFAULT_GHOSTDAG_K as u64) * 10,
-    prior_merge_depth: 3600,
-    prior_finality_depth: 86400,
-    prior_pruning_depth: 185798,
-    coinbase_payload_script_public_key_max_len: 150,
-    max_coinbase_payload_len: 204,
-
-    // This is technically a soft fork from the Go implementation since kaspad's consensus doesn't
-    // check these rules, but in practice it's enforced by the network layer that limits the message
-    // size to 1 GB.
-    // These values should be lowered to more reasonable amounts on the next planned HF/SF.
-    prior_max_tx_inputs: 1_000_000_000,
-    prior_max_tx_outputs: 1_000_000_000,
-    prior_max_signature_script_len: 1_000_000_000,
-    prior_max_script_public_key_len: 1_000_000_000,
-
-    mass_per_tx_byte: 1,
-    mass_per_script_pub_key_byte: 10,
-    mass_per_sig_op: 1000,
-    max_block_mass: 500_000,
-
-    storage_mass_parameter: STORAGE_MASS_PARAMETER,
-
-    // premine_daa_score is the DAA score after which the pre-deflationary period
-    // switches to the deflationary period. This number is calculated as follows:
-    // We define a year as 365.25 days
-    // Half a year in seconds = 365.25 / 2 * 24 * 60 * 60 = 15778800
-    // The network was down for three days shortly after launch
-    // Three days in seconds = 3 * 24 * 60 * 60 = 259200
-    premine_daa_score: 1,
-    premine_phase_base_subsidy: 1500000000000000,
-    prior_coinbase_maturity: 100,
-    skip_proof_of_work: false,
-    max_block_level: 250,
-    pruning_proof_m: 1000,
-
-    crescendo: CRESCENDO,
-    // TODO: Set this to always after the fork
-    crescendo_activation: ForkActivation::never(),
 };

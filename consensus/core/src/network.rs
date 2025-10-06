@@ -1,7 +1,7 @@
 //!
 //! # Network Types
 //!
-//! This module implements [`NetworkType`] (such as `mainnet`, `testnet`, `devnet`, and `simnet`)
+//! This module implements [`NetworkType`] (such as `mainnet`, `testnet`, and `simnet`)
 //! and [`NetworkId`] that combines a network type with an optional numerical suffix.
 //!
 //! The suffix is used to differentiate between multiple networks of the same type and is used
@@ -34,7 +34,6 @@ pub enum NetworkTypeError {
 pub enum NetworkType {
     Mainnet,
     Testnet,
-    Devnet,
     Simnet,
 }
 
@@ -44,7 +43,6 @@ impl NetworkType {
             NetworkType::Mainnet => 7110,
             NetworkType::Testnet => 7210,
             NetworkType::Simnet => 7310,
-            NetworkType::Devnet => 7410,
         }
     }
 
@@ -53,7 +51,6 @@ impl NetworkType {
             NetworkType::Mainnet => 8110,
             NetworkType::Testnet => 8210,
             NetworkType::Simnet => 8310,
-            NetworkType::Devnet => 8410,
         }
     }
 
@@ -62,13 +59,12 @@ impl NetworkType {
             NetworkType::Mainnet => 9110,
             NetworkType::Testnet => 9210,
             NetworkType::Simnet => 9310,
-            NetworkType::Devnet => 9410,
         }
     }
 
     pub fn iter() -> impl Iterator<Item = Self> {
-        static NETWORK_TYPES: [NetworkType; 4] =
-            [NetworkType::Mainnet, NetworkType::Testnet, NetworkType::Devnet, NetworkType::Simnet];
+        static NETWORK_TYPES: [NetworkType; 3] =
+            [NetworkType::Mainnet, NetworkType::Testnet, NetworkType::Simnet];
         NETWORK_TYPES.iter().copied()
     }
 }
@@ -80,7 +76,6 @@ impl TryFrom<Prefix> for NetworkType {
             Prefix::Mainnet => Ok(NetworkType::Mainnet),
             Prefix::Testnet => Ok(NetworkType::Testnet),
             Prefix::Simnet => Ok(NetworkType::Simnet),
-            Prefix::Devnet => Ok(NetworkType::Devnet),
             #[allow(unreachable_patterns)]
             #[cfg(test)]
             _ => Err(NetworkTypeError::InvalidNetworkType(prefix.to_string())),
@@ -93,7 +88,6 @@ impl From<NetworkType> for Prefix {
         match network_type {
             NetworkType::Mainnet => Prefix::Mainnet,
             NetworkType::Testnet => Prefix::Testnet,
-            NetworkType::Devnet => Prefix::Devnet,
             NetworkType::Simnet => Prefix::Simnet,
         }
     }
@@ -106,7 +100,6 @@ impl FromStr for NetworkType {
             "mainnet" => Ok(NetworkType::Mainnet),
             "testnet" => Ok(NetworkType::Testnet),
             "simnet" => Ok(NetworkType::Simnet),
-            "devnet" => Ok(NetworkType::Devnet),
             _ => Err(NetworkTypeError::InvalidNetworkType(network_type.to_string())),
         }
     }
@@ -119,7 +112,6 @@ impl Display for NetworkType {
             NetworkType::Mainnet => "mainnet",
             NetworkType::Testnet => "testnet",
             NetworkType::Simnet => "simnet",
-            NetworkType::Devnet => "devnet",
         };
         f.write_str(s)
     }
@@ -204,7 +196,7 @@ pub struct NetworkId {
 
 impl NetworkId {
     pub const fn new(network_type: NetworkType) -> Self {
-        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Devnet | NetworkType::Simnet) {
+        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Simnet) {
             panic!("network suffix required for this network type");
         }
 
@@ -212,7 +204,7 @@ impl NetworkId {
     }
 
     pub fn try_new(network_type: NetworkType) -> Result<Self, NetworkIdError> {
-        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Devnet | NetworkType::Simnet) {
+        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Simnet) {
             return Err(NetworkIdError::NetworkSuffixRequired(network_type.to_string()));
         }
 
@@ -248,15 +240,13 @@ impl NetworkId {
                 None | Some(_) => 7611,
             },
             NetworkType::Simnet => 7311,
-            NetworkType::Devnet => 7411,
         }
     }
 
     pub fn iter() -> impl Iterator<Item = Self> {
-        static NETWORK_IDS: [NetworkId; 4] = [
+        static NETWORK_IDS: [NetworkId; 3] = [
             NetworkId::new(NetworkType::Mainnet),
             NetworkId::with_suffix(NetworkType::Testnet, 1),
-            NetworkId::new(NetworkType::Devnet),
             NetworkId::new(NetworkType::Simnet),
         ];
         NETWORK_IDS.iter().copied()
@@ -312,7 +302,7 @@ impl FromStr for NetworkId {
         // Disallow testnet network without suffix.
         // Lack of suffix makes it impossible to distinguish between
         // multiple testnet networks
-        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Devnet | NetworkType::Simnet) && suffix.is_none() {
+        if !matches!(network_type, NetworkType::Mainnet | NetworkType::Simnet) && suffix.is_none() {
             return Err(NetworkIdError::MissingNetworkSuffix(network_name.to_string()));
         }
         match parts.next() {
@@ -433,7 +423,7 @@ mod tests {
     #[test]
     fn test_network_id_parse_roundtrip() {
         for nt in NetworkType::iter() {
-            if matches!(nt, NetworkType::Mainnet | NetworkType::Devnet | NetworkType::Simnet) {
+            if matches!(nt, NetworkType::Mainnet | NetworkType::Simnet) {
                 let ni = NetworkId::try_from(nt).expect("failed to create network id");
                 assert_eq!(nt, *NetworkId::from_str(ni.to_string().as_str()).unwrap());
                 assert_eq!(ni, NetworkId::from_str(ni.to_string().as_str()).unwrap());

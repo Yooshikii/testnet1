@@ -240,7 +240,6 @@ impl From<NetworkId> for Prefix {
         let network_type = value.network_type();
         match network_type {
             NetworkType::Mainnet => Prefix::KPUB,
-            NetworkType::Devnet => Prefix::KTUB,
             NetworkType::Simnet => Prefix::KTUB,
             NetworkType::Testnet => Prefix::KTUB,
         }

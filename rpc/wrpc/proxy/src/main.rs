@@ -26,9 +26,6 @@ struct Args {
     /// proxy for simnet network
     #[clap(long)]
     simnet: bool,
-    /// proxy for devnet network
-    #[clap(long)]
-    devnet: bool,
 
     /// proxy:port for gRPC server (grpc://127.0.0.1:16110)
     #[clap(name = "grpc")]
@@ -51,14 +48,12 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let Args { testnet, simnet, devnet, grpc_proxy_address, interface, verbose, threads, encoding } = Args::parse();
+    let Args { testnet, simnet, grpc_proxy_address, interface, verbose, threads, encoding } = Args::parse();
 
     let network_type = if testnet {
         NetworkType::Testnet
     } else if simnet {
         NetworkType::Simnet
-    } else if devnet {
-        NetworkType::Devnet
     } else {
         NetworkType::Mainnet
     };

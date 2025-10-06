@@ -187,7 +187,6 @@ impl Args {
         match (self.testnet, self.devnet, self.simnet) {
             (false, false, false) => NetworkId::new(NetworkType::Mainnet),
             (true, false, false) => NetworkId::with_suffix(NetworkType::Testnet, self.testnet_suffix),
-            (false, true, false) => NetworkId::new(NetworkType::Devnet),
             (false, false, true) => NetworkId::new(NetworkType::Simnet),
             _ => panic!("only a single net should be activated"),
         }
@@ -567,8 +566,6 @@ fn arg_match_many_unwrap_or<T: Clone + Send + Sync + 'static>(m: &clap::ArgMatch
                                             (required when initiating a new network from genesis)
       --testnet                             Use the test network
       --simnet                              Use the simulation test network
-      --devnet                              Use the development test network
-      --override-dag-params-file=           Overrides DAG params (allowed only on devnet)
   -s, --service=                            Service command {install, remove, start, stop}
       --nogrpc                              Don't initialize the gRPC server
 */

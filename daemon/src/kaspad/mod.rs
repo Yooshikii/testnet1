@@ -90,9 +90,6 @@ impl TryFrom<KaspadConfig> for Vec<String> {
             NetworkType::Testnet => {
                 argv.push("--testnet");
             }
-            NetworkType::Devnet => {
-                argv.push("--devnet");
-            }
             NetworkType::Simnet => {
                 argv.push("--simnet");
             }
