@@ -18,6 +18,7 @@ use kaspa_pow::{calc_block_level, calc_block_level_check_pow};
 use kaspa_utils::vec::VecExtensions;
 use parking_lot::lock_api::RwLock;
 use rocksdb::WriteBatch;
+use log::debug;
 
 use crate::{
     model::{
@@ -175,7 +176,7 @@ impl PruningProofManager {
         if proof[0].is_empty() {
             return Err(PruningImportError::PruningProofNotEnoughHeaders);
         }
-
+        
         // [Crescendo]: decide on ghostdag K based on proof pruning point DAA score
         let proof_pp_daa_score = proof[0].last().expect("checked if empty").daa_score;
         let ghostdag_k = self.ghostdag_k.get(proof_pp_daa_score);
@@ -223,7 +224,13 @@ impl PruningProofManager {
                 let level = level as usize;
                 reachability::init(reachability_stores[level].write().deref_mut()).unwrap();
                 relations_stores[level].insert_batch(&mut batch, ORIGIN, BlockHashes::new(vec![])).unwrap();
-                ghostdag_stores[level].insert(ORIGIN, ghostdag_managers[level].origin_ghostdag_data()).unwrap();
+                // Only insert ORIGIN if it doesn't exist
+                if !ghostdag_stores[level].has(ORIGIN).unwrap_or(false) {
+                    debug!("Inserting ORIGIN data for level {}", level);
+                    ghostdag_stores[level].insert(ORIGIN, ghostdag_managers[level].origin_ghostdag_data()).unwrap();
+                } else {
+                    debug!("Skipping insertion of ORIGIN hash for level {} as it already exists", level);
+                }
             }
 
             db.write(batch).unwrap();

@@ -1,6 +1,6 @@
 use crate::processes::ghostdag::ordering::SortableBlock;
 use kaspa_consensus_core::trusted::ExternalGhostdagData;
-use kaspa_consensus_core::{blockhash::BlockHashes, BlueWorkType};
+use kaspa_consensus_core::{blockhash::{self, BlockHashes}, BlueWorkType};
 use kaspa_consensus_core::{BlockHashMap, BlockHasher, BlockLevel, HashMapCustomHasher};
 use kaspa_database::prelude::DB;
 use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess, DbKey};
@@ -10,11 +10,12 @@ use kaspa_hashes::Hash;
 
 use itertools::EitherOrBoth::{Both, Left, Right};
 use itertools::Itertools;
-use kaspa_utils::mem_size::MemSizeEstimator;
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
 use std::iter::once;
+use std::mem::size_of;
 use std::{cell::RefCell, sync::Arc};
+use kaspa_utils::mem_size::MemSizeEstimator;
 
 /// Re-export for convenience
 pub use kaspa_consensus_core::{HashKTypeMap, KType};
@@ -48,7 +49,6 @@ impl MemSizeEstimator for GhostdagData {
 impl MemSizeEstimator for CompactGhostdagData {}
 
 impl From<&GhostdagData> for CompactGhostdagData {
-    #[inline(always)]
     fn from(value: &GhostdagData) -> Self {
         Self { blue_score: value.blue_score, blue_work: value.blue_work, selected_parent: value.selected_parent }
     }
@@ -141,23 +141,23 @@ impl GhostdagData {
         store: &'a (impl GhostdagStoreReader + ?Sized),
     ) -> impl Iterator<Item = SortableBlock> + 'a {
         self.mergeset_blues
-                .iter()
-                .skip(1) // Skip the selected parent
-                .rev()   // Reverse since blues and reds are stored with ascending blue work order
-                .cloned()
-                .map(|h| SortableBlock::new(h, store.get_blue_work(h).unwrap()))
-                .merge_join_by(
-                    self.mergeset_reds
-                        .iter()
-                        .rev() // Reverse
-                        .cloned()
-                        .map(|h| SortableBlock::new(h, store.get_blue_work(h).unwrap())),
-                    |a, b| b.cmp(a), // Reverse
-                )
-                .map(|r| match r {
-                    Left(b) | Right(b) => b,
-                    Both(_, _) => panic!("distinct blocks are never equal"),
-                })
+            .iter()
+            .skip(1) // Skip the selected parent
+            .rev()   // Reverse since blues and reds are stored with ascending blue work order
+            .cloned()
+            .map(|h| SortableBlock::new(h, store.get_blue_work(h).unwrap()))
+            .merge_join_by(
+                self.mergeset_reds
+                    .iter()
+                    .rev() // Reverse
+                    .cloned()
+                    .map(|h| SortableBlock::new(h, store.get_blue_work(h).unwrap())),
+                |a, b| b.cmp(a), // Reverse
+            )
+            .map(|r| match r {
+                Left(b) | Right(b) => b,
+                Both(_, _) => panic!("distinct blocks are never equal"),
+            })
     }
 
     /// Returns an iterator to the mergeset with no specified order (excluding the selected parent)
@@ -222,6 +222,7 @@ impl GhostdagData {
         self.blue_work = blue_work;
     }
 }
+
 pub trait GhostdagStoreReader {
     fn get_blue_score(&self, hash: Hash) -> Result<u64, StoreError>;
     fn get_blue_work(&self, hash: Hash) -> Result<BlueWorkType, StoreError>;
@@ -263,12 +264,25 @@ impl DbGhostdagStore {
         let lvl_bytes = level.to_le_bytes();
         let prefix = DatabaseStorePrefixes::Ghostdag.into_iter().chain(lvl_bytes).collect_vec();
         let compact_prefix = DatabaseStorePrefixes::GhostdagCompact.into_iter().chain(lvl_bytes).collect_vec();
-        Self {
+        let store = Self {
             db: Arc::clone(&db),
             level,
             access: CachedDbAccess::new(db.clone(), cache_policy, prefix),
             compact_access: CachedDbAccess::new(db, compact_cache_policy, compact_prefix),
+        };
+        // Initialize ORIGIN data if it doesn't exist
+        if !store.has(blockhash::ORIGIN).unwrap_or(false) {
+            let origin_data = Arc::new(GhostdagData::new(
+                0,
+                0.into(),
+                blockhash::NONE,
+                BlockHashes::new(Vec::new()),
+                BlockHashes::new(Vec::new()),
+                HashKTypeMap::new(BlockHashMap::new()),
+            ));
+            let _ = store.insert(blockhash::ORIGIN, origin_data);
         }
+        store
     }
 
     pub fn new_temp(
@@ -284,12 +298,25 @@ impl DbGhostdagStore {
         let prefix = DatabaseStorePrefixes::TempGhostdag.into_iter().chain(lvl_bytes).chain(temp_index_bytes).collect_vec();
         let compact_prefix =
             DatabaseStorePrefixes::TempGhostdagCompact.into_iter().chain(lvl_bytes).chain(temp_index_bytes).collect_vec();
-        Self {
+        let store = Self {
             db: Arc::clone(&db),
             level,
             access: CachedDbAccess::new(db.clone(), cache_policy, prefix),
             compact_access: CachedDbAccess::new(db, compact_cache_policy, compact_prefix),
+        };
+        // Initialize ORIGIN data if it doesn't exist
+        if !store.has(blockhash::ORIGIN).unwrap_or(false) {
+            let origin_data = Arc::new(GhostdagData::new(
+                0,
+                0.into(),
+                blockhash::NONE,
+                BlockHashes::new(Vec::new()),
+                BlockHashes::new(Vec::new()),
+                HashKTypeMap::new(BlockHashMap::new()),
+            ));
+            let _ = store.insert(blockhash::ORIGIN, origin_data);
         }
+        store
     }
 
     pub fn clone_with_new_cache(&self, cache_policy: CachePolicy, compact_cache_policy: CachePolicy) -> Self {
@@ -457,36 +484,36 @@ impl GhostdagStoreReader for MemoryGhostdagStore {
     }
 
     fn get_blue_work(&self, hash: Hash) -> Result<BlueWorkType, StoreError> {
-        match self.blue_work_map.borrow().get(&hash) {
-            Some(blue_work) => Ok(*blue_work),
+        match self.blue_score_map.borrow().get(&hash) {
+            Some(_) => Ok(self.blue_work_map.borrow()[&hash]),
             None => Err(Self::key_not_found_error(hash)),
         }
     }
 
     fn get_selected_parent(&self, hash: Hash) -> Result<Hash, StoreError> {
-        match self.selected_parent_map.borrow().get(&hash) {
-            Some(selected_parent) => Ok(*selected_parent),
+        match self.blue_score_map.borrow().get(&hash) {
+            Some(_) => Ok(self.selected_parent_map.borrow()[&hash]),
             None => Err(Self::key_not_found_error(hash)),
         }
     }
 
     fn get_mergeset_blues(&self, hash: Hash) -> Result<BlockHashes, StoreError> {
-        match self.mergeset_blues_map.borrow().get(&hash) {
-            Some(mergeset_blues) => Ok(BlockHashes::clone(mergeset_blues)),
+        match self.blue_score_map.borrow().get(&hash) {
+            Some(_) => Ok(BlockHashes::clone(&self.mergeset_blues_map.borrow()[&hash])),
             None => Err(Self::key_not_found_error(hash)),
         }
     }
 
     fn get_mergeset_reds(&self, hash: Hash) -> Result<BlockHashes, StoreError> {
-        match self.mergeset_reds_map.borrow().get(&hash) {
-            Some(mergeset_reds) => Ok(BlockHashes::clone(mergeset_reds)),
+        match self.blue_score_map.borrow().get(&hash) {
+            Some(_) => Ok(BlockHashes::clone(&self.mergeset_reds_map.borrow()[&hash])),
             None => Err(Self::key_not_found_error(hash)),
         }
     }
 
     fn get_blues_anticone_sizes(&self, hash: Hash) -> Result<HashKTypeMap, StoreError> {
-        match self.blues_anticone_sizes_map.borrow().get(&hash) {
-            Some(sizes) => Ok(HashKTypeMap::clone(sizes)),
+        match self.blue_score_map.borrow().get(&hash) {
+            Some(_) => Ok(HashKTypeMap::clone(&self.blues_anticone_sizes_map.borrow()[&hash])),
             None => Err(Self::key_not_found_error(hash)),
         }
     }
