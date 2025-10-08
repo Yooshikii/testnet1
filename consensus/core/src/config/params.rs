@@ -466,7 +466,7 @@ impl From<NetworkId> for Params {
 }
 
 pub const MAINNET_PARAMS: Params = Params {
-    peers: &["89.162.126.80:7110"],
+    peers: &["209.74.87.79:7111","89.162.126.80:7111"],
     net: NetworkId::new(NetworkType::Mainnet),
     genesis: GENESIS,
     prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
