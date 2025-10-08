@@ -286,7 +286,6 @@ message ReadyMessage {
 
 message BlockWithTrustedDataV4Message {
   BlockMessage block = 1;
-  repeated uint64 daaWindowIndices = 2; // TODO: remove once v5 is obsolete
   repeated uint64 ghostdagDataIndices = 3; // TODO: remove once v5 is obsolete
 }
 

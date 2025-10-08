@@ -79,7 +79,6 @@ impl RelayTransactionsFlow {
 
     pub fn invs_channel_size() -> usize {
         // TODO: reevaluate when the node is fully functional and later when the network tx rate increases
-        // Note: in go-kaspad we have 10,000 for this channel combined with tx channel.
         4096
     }
 

@@ -428,10 +428,6 @@ impl ConsensusSessionOwned {
         self.clone().spawn_blocking(|c| c.pruning_point()).await
     }
 
-    pub async fn async_get_daa_window(&self, hash: Hash) -> ConsensusResult<Vec<Hash>> {
-        self.clone().spawn_blocking(move |c| c.get_daa_window(hash)).await
-    }
-
     pub async fn async_get_trusted_block_associated_ghostdag_data_block_hashes(&self, hash: Hash) -> ConsensusResult<Vec<Hash>> {
         self.clone().spawn_blocking(move |c| c.get_trusted_block_associated_ghostdag_data_block_hashes(hash)).await
     }

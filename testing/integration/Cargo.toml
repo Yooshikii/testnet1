@@ -74,7 +74,6 @@ kaspa-txscript-errors.workspace = true
 [features]
 heap = ["dhat"]
 html_reports = []
-devnet-prealloc = ["kaspad/devnet-prealloc"]
 
 [lints]
 workspace = true

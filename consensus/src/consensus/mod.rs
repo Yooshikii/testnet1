@@ -1066,20 +1066,6 @@ impl ConsensusApi for Consensus {
         self.pruning_point_store.read().pruning_point().unwrap()
     }
 
-    fn get_daa_window(&self, hash: Hash) -> ConsensusResult<Vec<Hash>> {
-        let _guard = self.pruning_lock.blocking_read();
-        self.validate_block_exists(hash)?;
-        Ok(self
-            .services
-            .window_manager
-            .block_window(&self.ghostdag_store.get_data(hash).unwrap(), WindowType::DifficultyWindow)
-            .unwrap()
-            .deref()
-            .iter()
-            .map(|block| block.0.hash)
-            .collect())
-    }
-
     fn get_trusted_block_associated_ghostdag_data_block_hashes(&self, hash: Hash) -> ConsensusResult<Vec<Hash>> {
         let _guard = self.pruning_lock.blocking_read();
         self.validate_block_exists(hash)?;

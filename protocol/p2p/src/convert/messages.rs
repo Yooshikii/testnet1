@@ -125,7 +125,7 @@ impl TryFrom<protowire::TrustedDataMessage> for TrustedDataPackage {
 impl TryFrom<protowire::BlockWithTrustedDataV4Message> for TrustedDataEntry {
     type Error = ConversionError;
     fn try_from(msg: protowire::BlockWithTrustedDataV4Message) -> Result<Self, Self::Error> {
-        Ok(Self::new(msg.block.try_into_ex()?, msg.daa_window_indices, msg.ghostdag_data_indices))
+        Ok(Self::new(msg.block.try_into_ex()?, msg.ghostdag_data_indices))
     }
 }
 

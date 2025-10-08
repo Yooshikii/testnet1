@@ -78,7 +78,6 @@ impl TrustedDataPackage {
 /// A block with DAA/Ghostdag indices corresponding to data location within a `TrustedDataPackage`
 pub struct TrustedDataEntry {
     pub block: Block,
-    pub daa_window_indices: Vec<u64>,
     pub ghostdag_window_indices: Vec<u64>,
     //
     // Rust rewrite note: the indices fields are no longer needed with the way the pruning point anti-future
@@ -88,7 +87,7 @@ pub struct TrustedDataEntry {
 }
 
 impl TrustedDataEntry {
-    pub fn new(block: Block, daa_window_indices: Vec<u64>, ghostdag_window_indices: Vec<u64>) -> Self {
-        Self { block, daa_window_indices, ghostdag_window_indices }
+    pub fn new(block: Block, ghostdag_window_indices: Vec<u64>) -> Self {
+        Self { block, ghostdag_window_indices }
     }
 }

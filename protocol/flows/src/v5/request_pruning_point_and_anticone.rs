@@ -69,20 +69,12 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                 ))
                 .await?;
 
-            let daa_window_hash_to_index =
-                BlockHashMap::from_iter(daa_window.iter().enumerate().map(|(i, trusted_header)| (trusted_header.header.hash, i)));
             let ghostdag_data_hash_to_index =
                 BlockHashMap::from_iter(ghostdag_data.iter().enumerate().map(|(i, trusted_gd)| (trusted_gd.hash, i)));
 
             for hashes in pp_anticone.chunks(IBD_BATCH_SIZE) {
                 for hash in hashes {
                     let hash = *hash;
-                    let daa_window_indices = session
-                        .async_get_daa_window(hash)
-                        .await?
-                        .into_iter()
-                        .map(|hash| *daa_window_hash_to_index.get(&hash).unwrap() as u64)
-                        .collect_vec();
                     let ghostdag_data_indices = session
                         .async_get_trusted_block_associated_ghostdag_data_block_hashes(hash)
                         .await?
@@ -93,7 +85,7 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                     self.router
                         .enqueue(make_response!(
                             Payload::BlockWithTrustedDataV4,
-                            BlockWithTrustedDataV4Message { block: Some((&block).into()), daa_window_indices, ghostdag_data_indices },
+                            BlockWithTrustedDataV4Message { block: Some((&block).into()), ghostdag_data_indices },
                             request_id
                         ))
                         .await?;
