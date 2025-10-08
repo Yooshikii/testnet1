@@ -79,7 +79,6 @@ impl From<&KaspadMessagePayload> for KaspadMessagePayloadType {
             KaspadMessagePayload::IbdBlockLocatorHighestHashNotFound(_) => {
                 KaspadMessagePayloadType::IbdBlockLocatorHighestHashNotFound
             }
-            KaspadMessagePayload::BlockWithTrustedData(_) => KaspadMessagePayloadType::BlockWithTrustedData,
             KaspadMessagePayload::DoneBlocksWithTrustedData(_) => KaspadMessagePayloadType::DoneBlocksWithTrustedData,
             KaspadMessagePayload::RequestPruningPointAndItsAnticone(_) => KaspadMessagePayloadType::RequestPruningPointAndItsAnticone,
             KaspadMessagePayload::BlockHeaders(_) => KaspadMessagePayloadType::BlockHeaders,

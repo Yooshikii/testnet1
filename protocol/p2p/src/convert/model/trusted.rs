@@ -75,19 +75,12 @@ impl TrustedDataPackage {
     }
 }
 
-/// A block with DAA/Ghostdag indices corresponding to data location within a `TrustedDataPackage`
 pub struct TrustedDataEntry {
     pub block: Block,
-    pub ghostdag_window_indices: Vec<u64>,
-    //
-    // Rust rewrite note: the indices fields are no longer needed with the way the pruning point anti-future
-    // is maintained now. Meaning we simply build this sub-DAG in a way that the usual traversal operations will
-    // return the correct blocks/data without the need for explicitly provided indices.
-    //
 }
 
 impl TrustedDataEntry {
-    pub fn new(block: Block, ghostdag_window_indices: Vec<u64>) -> Self {
-        Self { block, ghostdag_window_indices }
+    pub fn new(block: Block) -> Self {
+        Self { block }
     }
 }

@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
 use itertools::Itertools;
-use kaspa_consensus_core::BlockHashMap;
 use kaspa_p2p_lib::{
     common::ProtocolError,
     dequeue, dequeue_with_request_id, make_response,
     pb::{
-        self, kaspad_message::Payload, BlockWithTrustedDataV4Message, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
+        self, kaspad_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
         TrustedDataMessage,
     },
     IncomingRoute, Router,
@@ -69,23 +68,14 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                 ))
                 .await?;
 
-            let ghostdag_data_hash_to_index =
-                BlockHashMap::from_iter(ghostdag_data.iter().enumerate().map(|(i, trusted_gd)| (trusted_gd.hash, i)));
-
             for hashes in pp_anticone.chunks(IBD_BATCH_SIZE) {
                 for hash in hashes {
                     let hash = *hash;
-                    let ghostdag_data_indices = session
-                        .async_get_trusted_block_associated_ghostdag_data_block_hashes(hash)
-                        .await?
-                        .into_iter()
-                        .map(|hash| *ghostdag_data_hash_to_index.get(&hash).unwrap() as u64)
-                        .collect_vec();
                     let block = session.async_get_block(hash).await?;
                     self.router
                         .enqueue(make_response!(
                             Payload::BlockWithTrustedDataV4,
-                            BlockWithTrustedDataV4Message { block: Some((&block).into()), ghostdag_data_indices },
+                            BlockWithTrustedDataMessage { block: Some((&block).into())},
                             request_id
                         ))
                         .await?;

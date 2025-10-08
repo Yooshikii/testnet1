@@ -65,9 +65,9 @@ impl TryFrom<protowire::BlockGhostdagDataHashPair> for TrustedGhostdagData {
     }
 }
 
-impl TryFrom<protowire::DaaBlockV4> for TrustedHeader {
+impl TryFrom<protowire::TrustedHeader> for TrustedHeader {
     type Error = ConversionError;
-    fn try_from(b: protowire::DaaBlockV4) -> Result<Self, Self::Error> {
+    fn try_from(b: protowire::TrustedHeader) -> Result<Self, Self::Error> {
         Ok(Self::new(b.header.try_into_ex().map(Arc::new)?, b.ghostdag_data.try_into_ex()?))
     }
 }

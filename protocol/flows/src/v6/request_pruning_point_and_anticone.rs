@@ -8,7 +8,7 @@ use kaspa_p2p_lib::{
     common::ProtocolError,
     dequeue, dequeue_with_request_id, make_response,
     pb::{
-        self, kaspad_message::Payload, BlockWithTrustedDataV4Message, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
+        self, kaspad_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
         TrustedDataMessage,
     },
     IncomingRoute, Router,
@@ -76,7 +76,7 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                         .enqueue(make_response!(
                             Payload::BlockWithTrustedDataV4,
                             // No need to send window indices in v6
-                            BlockWithTrustedDataV4Message { block: Some((&block).into()), ..Default::default() },
+                            BlockWithTrustedDataMessage { block: Some((&block).into()), ..Default::default() },
                             request_id
                         ))
                         .await?;
