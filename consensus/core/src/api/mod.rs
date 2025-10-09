@@ -1,5 +1,5 @@
 use futures_util::future::BoxFuture;
-use kaspa_muhash::MuHash;
+use vecno_muhash::MuHash;
 use std::sync::Arc;
 
 use crate::{
@@ -24,7 +24,7 @@ use crate::{
     utxo::utxo_inquirer::UtxoInquirerError,
     BlockHashSet, BlueWorkType, ChainPath,
 };
-use kaspa_hashes::Hash;
+use vecno_hashes::Hash;
 
 pub use self::stats::{BlockCount, ConsensusStats};
 

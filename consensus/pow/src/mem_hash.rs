@@ -1,4 +1,4 @@
-use kaspa_hashes::{Hash, VecnoHash};
+use vecno_hashes::{Hash, VecnoHash};
 use blake3::Hasher as Blake3;
 
 pub struct MemHash {

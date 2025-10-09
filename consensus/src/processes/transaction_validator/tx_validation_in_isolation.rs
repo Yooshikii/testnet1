@@ -1,5 +1,5 @@
-use crate::constants::{MAX_SOMPI, TX_VERSION};
-use kaspa_consensus_core::tx::Transaction;
+use crate::constants::{MAX_VENI, TX_VERSION};
+use vecno_consensus_core::tx::Transaction;
 use std::collections::HashSet;
 
 use super::{
@@ -121,7 +121,7 @@ fn check_duplicate_transaction_inputs(tx: &Transaction) -> TxResult<()> {
 }
 
 fn check_gas(tx: &Transaction) -> TxResult<()> {
-    // This should be revised if subnetworks are activated (along with other validations that weren't copied from kaspad)
+    // This should be revised if subnetworks are activated (along with other validations that weren't copied from vecnod)
     if tx.gas > 0 {
         return Err(TxRuleError::TxHasGas);
     }
@@ -142,7 +142,7 @@ fn check_transaction_output_value_ranges(tx: &Transaction) -> TxResult<()> {
             return Err(TxRuleError::TxOutZero(i));
         }
 
-        if output.value > MAX_SOMPI {
+        if output.value > MAX_VENI {
             return Err(TxRuleError::TxOutTooHigh(i));
         }
 
@@ -152,7 +152,7 @@ fn check_transaction_output_value_ranges(tx: &Transaction) -> TxResult<()> {
             return Err(TxRuleError::OutputsValueOverflow);
         }
 
-        if total > MAX_SOMPI {
+        if total > MAX_VENI {
             return Err(TxRuleError::TotalTxOutTooHigh);
         }
     }
@@ -170,11 +170,11 @@ fn check_transaction_subnetwork(tx: &Transaction) -> TxResult<()> {
 
 #[cfg(test)]
 mod tests {
-    use kaspa_consensus_core::{
+    use vecno_consensus_core::{
         subnets::{SubnetworkId, SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
         tx::{scriptvec, ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput},
     };
-    use kaspa_core::assert_match;
+    use vecno_core::assert_match;
 
     use crate::{
         constants::TX_VERSION,

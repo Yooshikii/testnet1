@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-grpc-server"
-description = "Kaspa gRPC server"
+name = "vecno-grpc-server"
+description = "Vecno gRPC server"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,15 +10,15 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-grpc-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-rpc-macros.workspace = true
-kaspa-rpc-service.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-utils.workspace = true
+vecno-consensus-core.workspace = true
+vecno-core.workspace = true
+vecno-grpc-core.workspace = true
+vecno-notify.workspace = true
+vecno-rpc-core.workspace = true
+vecno-rpc-macros.workspace = true
+vecno-rpc-service.workspace = true
+vecno-utils-tower.workspace = true
+vecno-utils.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true
@@ -42,7 +42,7 @@ uuid.workspace = true
 rustls.workspace = true
 
 [dev-dependencies]
-kaspa-grpc-client.workspace = true
+vecno-grpc-client.workspace = true
 
 [lints]
 workspace = true

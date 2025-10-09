@@ -1,11 +1,11 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
-use kaspa_consensus_core::errors::consensus::ConsensusError;
-use kaspa_core::debug;
-use kaspa_hashes::Hash;
-use kaspa_p2p_lib::{
+use vecno_consensus_core::errors::consensus::ConsensusError;
+use vecno_core::debug;
+use vecno_hashes::Hash;
+use vecno_p2p_lib::{
     common::ProtocolError,
     dequeue_with_request_id, make_response,
-    pb::{kaspad_message::Payload, BlockHeadersMessage, DoneHeadersMessage},
+    pb::{vecnod_message::Payload, BlockHeadersMessage, DoneHeadersMessage},
     IncomingRoute, Router,
 };
 use std::sync::Arc;

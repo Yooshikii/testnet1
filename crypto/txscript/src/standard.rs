@@ -4,9 +4,9 @@ use crate::{
     script_class::ScriptClass,
 };
 use blake2b_simd::Params;
-use kaspa_addresses::{Address, Prefix, Version};
-use kaspa_consensus_core::tx::{ScriptPublicKey, ScriptVec};
-use kaspa_txscript_errors::TxScriptError;
+use vecno_addresses::{Address, Prefix, Version};
+use vecno_consensus_core::tx::{ScriptPublicKey, ScriptVec};
+use vecno_txscript_errors::TxScriptError;
 use smallvec::SmallVec;
 use std::iter::once;
 
@@ -86,7 +86,7 @@ pub fn extract_script_pub_key_address(script_public_key: &ScriptPublicKey, prefi
 pub mod test_helpers {
     use super::*;
     use crate::{opcodes::codes::OpTrue, MAX_TX_IN_SEQUENCE_NUM};
-    use kaspa_consensus_core::{
+    use vecno_consensus_core::{
         constants::TX_VERSION,
         subnets::SUBNETWORK_ID_NATIVE,
         tx::{Transaction, TransactionInput, TransactionOutpoint, TransactionOutput},
@@ -102,7 +102,7 @@ pub mod test_helpers {
 
     /// Creates a transaction that spends the first output of provided transaction.
     /// Assumes that the output being spent has opTrueScript as its scriptPublicKey.
-    /// Creates the value of the spent output minus provided `fee` (in sompi).
+    /// Creates the value of the spent output minus provided `fee` (in veni).
     pub fn create_transaction(tx_to_spend: &Transaction, fee: u64) -> Transaction {
         let (script_public_key, redeem_script) = op_true_script();
         let signature_script = pay_to_script_hash_signature_script(redeem_script, vec![]).expect("the script is canonical");
@@ -116,9 +116,9 @@ pub mod test_helpers {
     /// Assumes that the outputs being spent have opTrueScript as their scriptPublicKey.
     ///
     /// If some change is provided, creates two outputs, first one with the value of the spent outputs minus `change`
-    /// and `fee` (in sompi) and second one of `change` amount.
+    /// and `fee` (in veni) and second one of `change` amount.
     ///
-    /// If no change is provided, creates only one output with the value of the spent outputs minus and `fee` (in sompi)
+    /// If no change is provided, creates only one output with the value of the spent outputs minus and `fee` (in veni)
     pub fn create_transaction_with_change<'a>(
         txs_to_spend: impl Iterator<Item = &'a Transaction>,
         output_indexes: Vec<usize>,
@@ -184,7 +184,7 @@ mod tests {
                     ),
                 ),
                 prefix: Prefix::Testnet,
-                expected_address: Ok("kaspatest:qxaqrlzlf6wes72en3568khahq66wf27tuhfxn5nytkd8tcep2c0vrse6gdmpks".try_into().unwrap()),
+                expected_address: Ok("vecnotest:qxaqrlzlf6wes72en3568khahq66wf27tuhfxn5nytkd8tcep2c0vrse6gdmpks".try_into().unwrap()),
             },
             Test {
                 name: "Testnet non standard script",

@@ -3,10 +3,10 @@ use crate::{
     flow_trait::Flow,
     flowcontext::transactions::MAX_INV_PER_TX_INV_MSG,
 };
-use kaspa_consensus_core::tx::{Transaction, TransactionId};
-use kaspa_consensusmanager::ConsensusProxy;
-use kaspa_core::{time::unix_now, warn};
-use kaspa_mining::{
+use vecno_consensus_core::tx::{Transaction, TransactionId};
+use vecno_consensusmanager::ConsensusProxy;
+use vecno_core::{time::unix_now, warn};
+use vecno_mining::{
     errors::MiningManagerError,
     mempool::{
         errors::RuleError,
@@ -15,10 +15,10 @@ use kaspa_mining::{
     model::tx_query::TransactionQuery,
     P2pTxCountSample,
 };
-use kaspa_p2p_lib::{
+use vecno_p2p_lib::{
     common::{ProtocolError, DEFAULT_TIMEOUT},
     dequeue, make_message,
-    pb::{kaspad_message::Payload, RequestTransactionsMessage, TransactionNotFoundMessage},
+    pb::{vecnod_message::Payload, RequestTransactionsMessage, TransactionNotFoundMessage},
     IncomingRoute, Router,
 };
 use std::sync::Arc;
@@ -231,7 +231,7 @@ impl RelayTransactionsFlow {
                 Err(MiningManagerError::MempoolError(RuleError::RejectNonStandard(..))) => {
                     self.spam_counter += 1;
                     if self.spam_counter % 100 == 0 {
-                        kaspa_core::warn!("Peer {} has shared {} spam/non-standard txs ({:?})", self.router, self.spam_counter, res);
+                        vecno_core::warn!("Peer {} has shared {} spam/non-standard txs ({:?})", self.router, self.spam_counter, res);
                     }
                 }
                 Err(_) => {}

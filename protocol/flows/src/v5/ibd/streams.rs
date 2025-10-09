@@ -2,18 +2,18 @@
 //! Logical stream abstractions used throughout the IBD negotiation protocols
 //!
 
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     errors::consensus::ConsensusError,
     header::Header,
     tx::{TransactionOutpoint, UtxoEntry},
 };
-use kaspa_core::{debug, info};
-use kaspa_p2p_lib::{
+use vecno_core::{debug, info};
+use vecno_p2p_lib::{
     common::{ProtocolError, DEFAULT_TIMEOUT},
     convert::model::trusted::TrustedDataEntry,
     make_message,
     pb::{
-        kaspad_message::Payload, RequestNextHeadersMessage, RequestNextPruningPointAndItsAnticoneBlocksMessage,
+        vecnod_message::Payload, RequestNextHeadersMessage, RequestNextPruningPointAndItsAnticoneBlocksMessage,
         RequestNextPruningPointUtxoSetChunkMessage,
     },
     IncomingRoute, Router,
@@ -39,7 +39,7 @@ impl<'a, 'b> TrustedEntryStream<'a, 'b> {
             Ok(op) => {
                 if let Some(msg) = op {
                     match msg.payload {
-                        Some(Payload::BlockWithTrustedDataV4(payload)) => {
+                        Some(Payload::BlockWithTrustedData(payload)) => {
                             let entry: TrustedDataEntry = payload.try_into()?;
                             if entry.block.is_header_only() {
                                 Err(ProtocolError::OtherOwned(format!("trusted entry block {} is header only", entry.block.hash())))
@@ -52,7 +52,7 @@ impl<'a, 'b> TrustedEntryStream<'a, 'b> {
                             Ok(None)
                         }
                         _ => Err(ProtocolError::UnexpectedMessage(
-                            stringify!(Payload::BlockWithTrustedDataV4 | Payload::DoneBlocksWithTrustedData),
+                            stringify!(Payload::BlockWithTrustedData | Payload::DoneBlocksWithTrustedData),
                             msg.payload.as_ref().map(|v| v.into()),
                         )),
                     }

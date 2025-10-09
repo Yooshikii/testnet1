@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-alloc"
-description = "Kaspa allocator wrapper"
+name = "vecno-alloc"
+description = "Vecno allocator wrapper"
 rust-version.workspace = true
 version.workspace = true
 authors.workspace = true

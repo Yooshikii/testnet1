@@ -1,5 +1,5 @@
-use kaspa_notify::events::EventType;
-use kaspa_utxoindex::errors::UtxoIndexError;
+use vecno_notify::events::EventType;
+use vecno_utxoindex::errors::UtxoIndexError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]

@@ -1,4 +1,4 @@
-use kaspa_consensus_core::{config::params::ForkedParam, constants::TX_VERSION};
+use vecno_consensus_core::{config::params::ForkedParam, constants::TX_VERSION};
 
 pub(crate) const DEFAULT_MAXIMUM_TRANSACTION_COUNT: usize = 1_000_000;
 pub(crate) const DEFAULT_MEMPOOL_SIZE_LIMIT: usize = 1_000_000_000;
@@ -15,7 +15,7 @@ pub(crate) const DEFAULT_MAXIMUM_ORPHAN_TRANSACTION_MASS: u64 = 100_000;
 pub(crate) const DEFAULT_MAXIMUM_ORPHAN_TRANSACTION_COUNT: u64 = 500;
 
 /// DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE specifies the minimum transaction fee for a transaction to be accepted to
-/// the mempool and relayed. It is specified in sompi per 1kg (or 1000 grams) of transaction mass.
+/// the mempool and relayed. It is specified in veni per 1kg (or 1000 grams) of transaction mass.
 pub(crate) const DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE: u64 = 1000;
 
 /// Standard transaction version range might be different from what consensus accepts, therefore
@@ -95,7 +95,7 @@ impl Config {
     }
 
     /// Build a default config.
-    /// The arguments should be obtained from the current consensus [`kaspa_consensus_core::config::params::Params`] instance.
+    /// The arguments should be obtained from the current consensus [`vecno_consensus_core::config::params::Params`] instance.
     pub fn build_default(
         target_milliseconds_per_block: ForkedParam<u64>,
         relay_non_std_transactions: bool,
@@ -138,7 +138,7 @@ impl Config {
 
     /// Returns the minimum standard fee/mass ratio currently required by the mempool
     pub(crate) fn minimum_feerate(&self) -> f64 {
-        // The parameter minimum_relay_transaction_fee is in sompi/kg units so divide by 1000 to get sompi/gram
+        // The parameter minimum_relay_transaction_fee is in veni/kg units so divide by 1000 to get veni/gram
         self.minimum_relay_transaction_fee as f64 / 1000.0
     }
 }

@@ -10,9 +10,9 @@ use crate::{
         window::WindowManager,
     },
 };
-use kaspa_consensus_core::{block::Block, errors::tx::TxRuleError};
-use kaspa_database::prelude::StoreResultExtensions;
-use kaspa_hashes::Hash;
+use vecno_consensus_core::{block::Block, errors::tx::TxRuleError};
+use vecno_database::prelude::StoreResultExtensions;
+use vecno_hashes::Hash;
 use once_cell::unsync::Lazy;
 use std::sync::Arc;
 

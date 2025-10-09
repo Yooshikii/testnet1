@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
-use kaspa_addressmanager::NetAddress;
-use kaspa_connectionmanager::ConnectionManager;
-use kaspa_core::{
+use vecno_addressmanager::NetAddress;
+use vecno_connectionmanager::ConnectionManager;
+use vecno_core::{
     task::service::{AsyncService, AsyncServiceFuture},
     trace,
 };
-use kaspa_p2p_lib::Adaptor;
-use kaspa_utils::triggers::SingleTrigger;
-use kaspa_utils_tower::counters::TowerConnectionCounters;
+use vecno_p2p_lib::Adaptor;
+use vecno_utils::triggers::SingleTrigger;
+use vecno_utils_tower::counters::TowerConnectionCounters;
 
 use crate::flow_context::FlowContext;
 

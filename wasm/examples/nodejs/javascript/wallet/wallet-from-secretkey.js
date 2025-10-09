@@ -4,14 +4,14 @@ globalThis.WebSocket = require('websocket').w3cwebsocket; // W3C WebSocket modul
 
 const path = require('path');
 const fs = require('fs');
-const kaspa = require('../../../../nodejs/kaspa-dev');
+const vecno = require('../../../../nodejs/vecno-dev');
 const {
     Wallet, setDefaultStorageFolder,
     AccountKind, Mnemonic, Resolver,
-    kaspaToSompi,
-    sompiToKaspaString,
+    vecnoToVeni,
+    veniToVecnoString,
     Address
-} = kaspa;
+} = vecno;
 
 let storageFolder = path.join(__dirname, '../../../data/wallets').normalize();
 if (!fs.existsSync(storageFolder)) {
@@ -79,7 +79,7 @@ setDefaultStorageFolder(storageFolder);
             list.push({
                 Id: tx.id,
                 Type: tx.data.type,
-                Value: sompiToKaspaString(value(tx)||0)
+                Value: veniToVecnoString(value(tx)||0)
             });
             //console.log("tx.data", tx.id, tx.data)
         });
@@ -134,9 +134,9 @@ setDefaultStorageFolder(storageFolder);
                         let b = balance[id];
                         list.push({
                             Account: id.substring(0, 5)+"...",
-                            Mature: sompiToKaspaString(b.mature),
-                            Pending: sompiToKaspaString(b.pending),
-                            Outgoing: sompiToKaspaString(b.outgoing),
+                            Mature: veniToVecnoString(b.mature),
+                            Pending: veniToVecnoString(b.pending),
+                            Outgoing: veniToVecnoString(b.outgoing),
                             MatureUtxo: b.matureUtxoCount,
                             PendingUtxo: b.pendingUtxoCount,
                             StasisUtxo: b.stasisUtxoCount
@@ -183,7 +183,7 @@ setDefaultStorageFolder(storageFolder);
 
         let account = await wallet.accountsCreate({
             walletSecret,
-            type:"kaspa-keypair-standard",
+            type:"vecno-keypair-standard",
             accountName:"Account-B",
             prvKeyDataId: prvKeyData.prvKeyDataId,
         });
@@ -254,16 +254,16 @@ setDefaultStorageFolder(storageFolder);
         // });
         // console.log("sweepResult", sweepResult)
 
-        // Send kaspa to address
+        // Send vecno to address
         let sendResult = await wallet.accountsSend({
             walletSecret,
             // @ts-ignore
             accountId: firstAccount.accountId,
-            priorityFeeSompi: kaspaToSompi("0.001"),
+            priorityFeeVeni: vecnoToVeni("0.001"),
             destination:[{
                 // @ts-ignore
                 address: firstAccount.changeAddress,
-                amount: kaspaToSompi("1.567")
+                amount: vecnoToVeni("1.567")
             }]
         });
         console.log("sendResult", sendResult);
@@ -271,12 +271,12 @@ setDefaultStorageFolder(storageFolder);
         // @ts-ignore
         log_transactions(firstAccount.accountId)
 
-        // Transfer kaspa between accounts
+        // Transfer vecno between accounts
         let transferResult = await wallet.accountsTransfer({
             walletSecret,
             sourceAccountId: firstAccount.accountId,
             destinationAccountId: firstAccount.accountId,
-            transferAmountSompi: kaspaToSompi("2.456"),
+            transferAmountVeni: vecnoToVeni("2.456"),
         });
         console.log("transferResult", transferResult);
 

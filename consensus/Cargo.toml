@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensus"
-description = "Kaspa consensus library"
+name = "vecno-consensus"
+description = "Vecno consensus library"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -18,21 +18,21 @@ faster-hex.workspace = true
 futures-util.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-merkle.workspace = true
-kaspa-muhash.workspace = true
-kaspa-notify.workspace = true
-kaspa-pow.workspace = true
-kaspa-txscript.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-utils.workspace = true
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-database.workspace = true
+vecno-hashes.workspace = true
+vecno-math.workspace = true
+vecno-merkle.workspace = true
+vecno-muhash.workspace = true
+vecno-notify.workspace = true
+vecno-pow.workspace = true
+vecno-txscript.workspace = true
+vecno-txscript-errors.workspace = true
+vecno-utils.workspace = true
 log.workspace = true
 once_cell.workspace = true
 parking_lot.workspace = true
@@ -54,8 +54,8 @@ criterion.workspace = true
 serde_json.workspace = true
 flate2.workspace = true
 rand_distr.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-addresses.workspace = true
+vecno-txscript-errors.workspace = true
+vecno-addresses.workspace = true
 
 [[bench]]
 name = "parallel_muhash"
@@ -67,7 +67,7 @@ harness = false
 
 [features]
 html_reports = []
-devnet-prealloc = ["kaspa-consensus-core/devnet-prealloc"]
+devnet-prealloc = ["vecno-consensus-core/devnet-prealloc"]
 
 [lints]
 workspace = true

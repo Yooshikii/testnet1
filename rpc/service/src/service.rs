@@ -4,46 +4,46 @@ use super::collector::{CollectorFromConsensus, CollectorFromIndex};
 use crate::converter::feerate_estimate::{FeeEstimateConverter, FeeEstimateVerboseConverter};
 use crate::converter::{consensus::ConsensusConverter, index::IndexConverter, protocol::ProtocolConverter};
 use async_trait::async_trait;
-use kaspa_consensus_core::api::counters::ProcessingCounters;
-use kaspa_consensus_core::daa_score_timestamp::DaaScoreTimestamp;
-use kaspa_consensus_core::errors::block::RuleError;
-use kaspa_consensus_core::mass::{calc_storage_mass, UtxoCell};
-use kaspa_consensus_core::utxo::utxo_inquirer::UtxoInquirerError;
-use kaspa_consensus_core::{
+use vecno_consensus_core::api::counters::ProcessingCounters;
+use vecno_consensus_core::daa_score_timestamp::DaaScoreTimestamp;
+use vecno_consensus_core::errors::block::RuleError;
+use vecno_consensus_core::mass::{calc_storage_mass, UtxoCell};
+use vecno_consensus_core::utxo::utxo_inquirer::UtxoInquirerError;
+use vecno_consensus_core::{
     block::Block,
     coinbase::MinerData,
     config::Config,
-    constants::MAX_SOMPI,
+    constants::MAX_VENI,
     network::NetworkType,
     tx::{Transaction, COINBASE_TRANSACTION_INDEX},
 };
-use kaspa_consensus_notify::{
+use vecno_consensus_notify::{
     notifier::ConsensusNotifier,
     {connection::ConsensusChannelConnection, notification::Notification as ConsensusNotification},
 };
-use kaspa_consensusmanager::ConsensusManager;
-use kaspa_core::time::unix_now;
-use kaspa_core::{
+use vecno_consensusmanager::ConsensusManager;
+use vecno_core::time::unix_now;
+use vecno_core::{
     core::Core,
     debug,
-    kaspad_env::version,
+    vecnod_env::version,
     signals::Shutdown,
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     task::tick::TickService,
     trace, warn,
 };
-use kaspa_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use kaspa_index_core::{
+use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
+use vecno_index_core::{
     connection::IndexChannelConnection, indexed_utxos::UtxoSetByScriptPublicKey, notification::Notification as IndexNotification,
     notifier::IndexNotifier,
 };
-use kaspa_mining::feerate::FeeEstimateVerbose;
-use kaspa_mining::model::tx_query::TransactionQuery;
-use kaspa_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
-use kaspa_notify::listener::ListenerLifespan;
-use kaspa_notify::subscription::context::SubscriptionContext;
-use kaspa_notify::subscription::{MutationPolicies, UtxosChangedMutationPolicy};
-use kaspa_notify::{
+use vecno_mining::feerate::FeeEstimateVerbose;
+use vecno_mining::model::tx_query::TransactionQuery;
+use vecno_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
+use vecno_notify::listener::ListenerLifespan;
+use vecno_notify::subscription::context::SubscriptionContext;
+use vecno_notify::subscription::{MutationPolicies, UtxosChangedMutationPolicy};
+use vecno_notify::{
     collector::DynCollector,
     connection::ChannelType,
     events::{EventSwitches, EventType, EVENT_TYPE_ARRAY},
@@ -52,11 +52,11 @@ use kaspa_notify::{
     scope::Scope,
     subscriber::{Subscriber, SubscriptionManager},
 };
-use kaspa_p2p_flows::flow_context::FlowContext;
-use kaspa_p2p_lib::common::ProtocolError;
-use kaspa_p2p_mining::rule_engine::MiningRuleEngine;
-use kaspa_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
-use kaspa_rpc_core::{
+use vecno_p2p_flows::flow_context::FlowContext;
+use vecno_p2p_lib::common::ProtocolError;
+use vecno_p2p_mining::rule_engine::MiningRuleEngine;
+use vecno_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
+use vecno_rpc_core::{
     api::{
         connection::DynRpcConnection,
         ops::{RPC_API_REVISION, RPC_API_VERSION},
@@ -66,12 +66,12 @@ use kaspa_rpc_core::{
     notify::connection::ChannelConnection,
     Notification, RpcError, RpcResult,
 };
-use kaspa_txscript::{extract_script_pub_key_address, pay_to_address_script};
-use kaspa_utils::expiring_cache::ExpiringCache;
-use kaspa_utils::sysinfo::SystemInfo;
-use kaspa_utils::{channel::Channel, triggers::SingleTrigger};
-use kaspa_utils_tower::counters::TowerConnectionCounters;
-use kaspa_utxoindex::api::UtxoIndexProxy;
+use vecno_txscript::{extract_script_pub_key_address, pay_to_address_script};
+use vecno_utils::expiring_cache::ExpiringCache;
+use vecno_utils::sysinfo::SystemInfo;
+use vecno_utils::{channel::Channel, triggers::SingleTrigger};
+use vecno_utils_tower::counters::TowerConnectionCounters;
+use vecno_utxoindex::api::UtxoIndexProxy;
 use std::time::Duration;
 use std::{
     collections::HashMap,
@@ -82,7 +82,7 @@ use std::{
 use tokio::join;
 use workflow_rpc::server::WebSocketCounters as WrpcServerCounters;
 
-/// A service implementing the Rpc API at kaspa_rpc_core level.
+/// A service implementing the Rpc API at vecno_rpc_core level.
 ///
 /// Collects notifications from the consensus and forwards them to
 /// actual protocol-featured services. Thanks to the subscription pattern,
@@ -120,7 +120,7 @@ pub struct RpcCoreService {
     grpc_tower_counters: Arc<TowerConnectionCounters>,
     system_info: SystemInfo,
     fee_estimate_cache: ExpiringCache<RpcFeeEstimate>,
-    fee_estimate_verbose_cache: ExpiringCache<kaspa_mining::errors::MiningManagerResult<GetFeeEstimateExperimentalResponse>>,
+    fee_estimate_verbose_cache: ExpiringCache<vecno_mining::errors::MiningManagerResult<GetFeeEstimateExperimentalResponse>>,
     mining_rule_engine: Arc<MiningRuleEngine>,
 }
 
@@ -428,11 +428,11 @@ NOTE: This error usually indicates an RPC conversion error between the node and 
 
         // Make sure the pay address prefix matches the config network type
         if request.pay_address.prefix != self.config.prefix() {
-            return Err(kaspa_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
+            return Err(vecno_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
         }
 
         // Build block template
-        let script_public_key = kaspa_txscript::pay_to_address_script(&request.pay_address);
+        let script_public_key = vecno_txscript::pay_to_address_script(&request.pay_address);
         let extra_data = version().as_bytes().iter().chain(once(&(b'/'))).chain(&request.extra_data).cloned().collect::<Vec<_>>();
         let miner_data: MinerData = MinerData::new(script_public_key, extra_data);
         let session = self.consensus_manager.consensus().unguarded_session();
@@ -782,9 +782,9 @@ NOTE: This error usually indicates an RPC conversion error between the node and 
         if !self.config.utxoindex {
             return Err(RpcError::NoUtxoIndex);
         }
-        let circulating_sompi =
+        let circulating_veni =
             self.utxoindex.clone().unwrap().get_circulating_supply().await.map_err(|e| RpcError::General(e.to_string()))?;
-        Ok(GetCoinSupplyResponse::new(MAX_SOMPI, circulating_sompi))
+        Ok(GetCoinSupplyResponse::new(MAX_VENI, circulating_veni))
     }
 
     async fn get_daa_score_timestamp_estimate_call(
@@ -970,7 +970,7 @@ NOTE: This error usually indicates an RPC conversion error between the node and 
 
         // In the previous golang implementation the convention for virtual was the following const.
         // In the current implementation, consensus behaves the same when it gets a None instead.
-        const LEGACY_VIRTUAL: kaspa_hashes::Hash = kaspa_hashes::Hash::from_bytes([0xff; kaspa_hashes::HASH_SIZE]);
+        const LEGACY_VIRTUAL: vecno_hashes::Hash = vecno_hashes::Hash::from_bytes([0xff; vecno_hashes::HASH_SIZE]);
         let mut start_hash = request.start_hash;
         if let Some(start) = start_hash {
             if start == LEGACY_VIRTUAL {

@@ -6,10 +6,10 @@
 
 use crate::error::Error;
 use js_sys::{Array, Object};
-use kaspa_consensus_core::hashing;
-use kaspa_consensus_core::header as native;
-use kaspa_hashes::Hash;
-use kaspa_utils::hex::ToHex;
+use vecno_consensus_core::hashing;
+use vecno_consensus_core::header as native;
+use vecno_hashes::Hash;
+use vecno_utils::hex::ToHex;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::*;
 use wasm_bindgen::prelude::*;
@@ -72,7 +72,7 @@ extern "C" {
     pub type HeaderT;
 }
 
-/// Kaspa Block Header
+/// Vecno Block Header
 ///
 /// @category Consensus
 #[derive(Clone, Debug, Serialize, Deserialize, CastFromJs)]

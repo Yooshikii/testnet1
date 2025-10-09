@@ -1,15 +1,15 @@
-use kaspa_consensus_core::blockstatus::BlockStatus;
-use kaspa_consensus_core::ChainPath;
-use kaspa_database::registry::DatabaseStorePrefixes;
+use vecno_consensus_core::blockstatus::BlockStatus;
+use vecno_consensus_core::ChainPath;
+use vecno_database::registry::DatabaseStorePrefixes;
 use parking_lot::RwLockWriteGuard;
 use rocksdb::WriteBatch;
 
 use std::sync::Arc;
 
-use kaspa_database::prelude::{BatchDbWriter, CachePolicy, CachedDbAccess, DbWriter};
-use kaspa_database::prelude::{CachedDbItem, DB};
-use kaspa_database::prelude::{StoreError, StoreResult};
-use kaspa_hashes::Hash;
+use vecno_database::prelude::{BatchDbWriter, CachePolicy, CachedDbAccess, DbWriter};
+use vecno_database::prelude::{CachedDbItem, DB};
+use vecno_database::prelude::{StoreError, StoreResult};
+use vecno_hashes::Hash;
 
 use super::U64Key;
 

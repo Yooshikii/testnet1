@@ -12,7 +12,7 @@
 #![allow(non_snake_case)]
 
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_addresses::Prefix;
+use vecno_addresses::Prefix;
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::Deref;
@@ -180,7 +180,7 @@ impl From<NetworkIdError> for JsValue {
 }
 
 ///
-/// NetworkId is a unique identifier for a kaspa network instance.
+/// NetworkId is a unique identifier for a network instance.
 /// It is composed of a network type and an optional suffix.
 ///
 /// @category Consensus
@@ -252,7 +252,7 @@ impl NetworkId {
         NETWORK_IDS.iter().copied()
     }
 
-    /// Returns a textual description of the network prefixed with `kaspa-`
+    /// Returns a textual description of the network prefixed with `vecno-`
     pub fn to_prefixed(&self) -> String {
         format!("vecno-{}", self)
     }

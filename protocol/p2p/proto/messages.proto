@@ -1,11 +1,11 @@
 syntax = "proto3";
 package protowire;
 
-option go_package = "github.com/kaspanet/kaspad/protowire";
+option go_package = "";
 
 import "p2p.proto";
 
-message KaspadMessage {
+message VecnodMessage {
   uint32 response_id = 101;
   uint32 request_id = 102;
   oneof payload {
@@ -45,7 +45,7 @@ message KaspadMessage {
     RequestPruningPointProofMessage requestPruningPointProof = 48;
     PruningPointProofMessage pruningPointProof = 49;
     ReadyMessage ready = 50;
-    BlockWithTrustedDataMessage blockWithTrustedDataV4 = 51;
+    BlockWithTrustedDataMessage blockWithTrustedData = 51;
     TrustedDataMessage trustedData = 52;
     RequestIBDChainBlockLocatorMessage requestIBDChainBlockLocator = 53;
     IbdChainBlockLocatorMessage ibdChainBlockLocator = 54;
@@ -55,5 +55,5 @@ message KaspadMessage {
 }
 
 service P2P {
-  rpc MessageStream (stream KaspadMessage) returns (stream KaspadMessage) {}
+  rpc MessageStream (stream VecnodMessage) returns (stream VecnodMessage) {}
 }

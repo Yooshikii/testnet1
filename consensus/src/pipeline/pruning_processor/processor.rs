@@ -25,7 +25,7 @@ use crate::{
 };
 use crossbeam_channel::Receiver as CrossbeamReceiver;
 use itertools::Itertools;
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     blockhash::ORIGIN,
     blockstatus::BlockStatus::StatusHeaderOnly,
     config::Config,
@@ -34,12 +34,12 @@ use kaspa_consensus_core::{
     trusted::ExternalGhostdagData,
     BlockHashMap, BlockHashSet, BlockLevel,
 };
-use kaspa_consensusmanager::SessionLock;
-use kaspa_core::{debug, info, trace, warn};
-use kaspa_database::prelude::{BatchDbWriter, MemoryWriter, StoreResultExtensions, DB};
-use kaspa_hashes::Hash;
-use kaspa_muhash::MuHash;
-use kaspa_utils::iter::IterExtensions;
+use vecno_consensusmanager::SessionLock;
+use vecno_core::{debug, info, trace, warn};
+use vecno_database::prelude::{BatchDbWriter, MemoryWriter, StoreResultExtensions, DB};
+use vecno_hashes::Hash;
+use vecno_muhash::MuHash;
+use vecno_utils::iter::IterExtensions;
 use parking_lot::RwLockUpgradableReadGuard;
 use rocksdb::WriteBatch;
 use std::{

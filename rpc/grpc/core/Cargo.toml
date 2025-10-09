@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-grpc-core"
-description = "Kaspa gRPC core"
+name = "vecno-grpc-core"
+description = "Vecno gRPC core"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,12 +10,12 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-core.workspace = true
+vecno-notify.workspace = true
+vecno-rpc-core.workspace = true
+vecno-utils.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true

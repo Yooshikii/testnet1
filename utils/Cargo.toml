@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-utils"
-description = "Kaspa utilities"
+name = "vecno-utils"
+description = "Vecno utilities"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true

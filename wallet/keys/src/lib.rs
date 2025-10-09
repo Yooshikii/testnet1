@@ -1,7 +1,7 @@
 //!
-//! # Kaspa Wallet Keys
+//! # Vecno Wallet Keys
 //!
-//! This crate provides tools for creating and managing Kaspa wallet keys.
+//! This crate provides tools for creating and managing Vecno wallet keys.
 //! This includes extended key generation and derivation.
 //!
 

@@ -1,3 +1,3 @@
-use kaspa_txscript::script_class::ScriptClass;
+use vecno_txscript::script_class::ScriptClass;
 
 pub type RpcScriptClass = ScriptClass;

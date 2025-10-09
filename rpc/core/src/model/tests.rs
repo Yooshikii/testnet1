@@ -2,16 +2,16 @@
 mod mockery {
 
     use crate::{model::*, RpcScriptClass};
-    use kaspa_addresses::{Prefix, Version};
-    use kaspa_consensus_core::api::BlockCount;
-    use kaspa_consensus_core::network::NetworkType;
-    use kaspa_consensus_core::subnets::SubnetworkId;
-    use kaspa_consensus_core::tx::ScriptPublicKey;
-    use kaspa_hashes::Hash;
-    use kaspa_math::Uint192;
-    use kaspa_notify::subscription::Command;
-    use kaspa_rpc_macros::test_wrpc_serializer as test;
-    use kaspa_utils::networking::{ContextualNetAddress, IpAddress, NetAddress};
+    use vecno_addresses::{Prefix, Version};
+    use vecno_consensus_core::api::BlockCount;
+    use vecno_consensus_core::network::NetworkType;
+    use vecno_consensus_core::subnets::SubnetworkId;
+    use vecno_consensus_core::tx::ScriptPublicKey;
+    use vecno_hashes::Hash;
+    use vecno_math::Uint192;
+    use vecno_notify::subscription::Command;
+    use vecno_rpc_macros::test_wrpc_serializer as test;
+    use vecno_utils::networking::{ContextualNetAddress, IpAddress, NetAddress};
     use rand::Rng;
     use std::net::{IpAddr, Ipv4Addr};
     use std::sync::Arc;
@@ -919,7 +919,7 @@ mod mockery {
 
     impl Mock for GetCoinSupplyResponse {
         fn mock() -> Self {
-            GetCoinSupplyResponse { max_sompi: mock(), circulating_sompi: mock() }
+            GetCoinSupplyResponse { max_veni: mock(), circulating_veni: mock() }
         }
     }
 

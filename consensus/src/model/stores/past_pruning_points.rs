@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
-use kaspa_database::prelude::{CachePolicy, DB};
-use kaspa_database::prelude::{StoreError, StoreResult};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
+use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
+use vecno_database::prelude::{CachePolicy, DB};
+use vecno_database::prelude::{StoreError, StoreResult};
+use vecno_database::registry::DatabaseStorePrefixes;
+use vecno_hashes::Hash;
 use rocksdb::WriteBatch;
 
 use super::U64Key;

@@ -1,7 +1,7 @@
 pub mod cpu_miner;
 pub mod error;
 pub mod imports;
-pub mod kaspad;
+pub mod vecnod;
 pub mod result;
 
 use std::fmt::Display;
@@ -9,7 +9,7 @@ use std::fmt::Display;
 use crate::imports::*;
 pub use crate::result::Result;
 pub use cpu_miner::{CpuMiner, CpuMinerConfig, CpuMinerCtl};
-pub use kaspad::{Kaspad, KaspadConfig, KaspadCtl};
+pub use vecnod::{Vecnod, VecnodConfig, VecnodCtl};
 use workflow_core::runtime;
 use workflow_node::process::Event as ProcessEvent;
 use workflow_store::fs::*;
@@ -18,8 +18,8 @@ pub static LOCATIONS: &[&str] = &[
     "bin",
     "../target/release",
     "../target/debug",
-    "../../kaspa-cpu-miner/target/debug",
-    "../../kaspa-cpu-miner/target/release",
+    "../../vecno-cpu-miner/target/debug",
+    "../../vecno-cpu-miner/target/release",
     "bin/windows-x64",
     "bin/linux-ia32",
     "bin/linux-x64",
@@ -54,24 +54,24 @@ pub async fn locate_binaries(root: &str, name: &str) -> Result<Vec<PathBuf>> {
 
 #[derive(Debug, Clone, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 pub enum DaemonKind {
-    Kaspad,
+    Vecnod,
     CpuMiner,
 }
 
 #[derive(Default)]
 pub struct Daemons {
-    pub kaspad: Option<Arc<dyn KaspadCtl + Send + Sync + 'static>>,
-    // pub kaspad_automute : Arc<
+    pub vecnod: Option<Arc<dyn VecnodCtl + Send + Sync + 'static>>,
+    // pub vecnod_automute : Arc<
     pub cpu_miner: Option<Arc<dyn CpuMinerCtl + Send + Sync + 'static>>,
 }
 
 impl Daemons {
     pub fn new() -> Self {
-        Self { kaspad: None, cpu_miner: None }
+        Self { vecnod: None, cpu_miner: None }
     }
 
-    pub fn with_kaspad(mut self, kaspad: Arc<dyn KaspadCtl + Send + Sync + 'static>) -> Self {
-        self.kaspad = Some(kaspad);
+    pub fn with_vecnod(mut self, vecnod: Arc<dyn VecnodCtl + Send + Sync + 'static>) -> Self {
+        self.vecnod = Some(vecnod);
         self
     }
 
@@ -80,12 +80,12 @@ impl Daemons {
         self
     }
 
-    pub fn kaspad(&self) -> Arc<dyn KaspadCtl + Send + Sync + 'static> {
-        self.kaspad.as_ref().expect("accessing Daemons::kaspad while kaspad option is None").clone()
+    pub fn vecnod(&self) -> Arc<dyn VecnodCtl + Send + Sync + 'static> {
+        self.vecnod.as_ref().expect("accessing Daemons::vecnod while vecnod option is None").clone()
     }
 
-    pub fn try_kaspad(&self) -> Option<Arc<dyn KaspadCtl + Send + Sync + 'static>> {
-        self.kaspad.clone()
+    pub fn try_vecnod(&self) -> Option<Arc<dyn VecnodCtl + Send + Sync + 'static>> {
+        self.vecnod.clone()
     }
 
     pub fn cpu_miner(&self) -> Arc<dyn CpuMinerCtl + Send + Sync + 'static> {

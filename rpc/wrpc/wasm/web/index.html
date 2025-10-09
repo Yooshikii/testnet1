@@ -1,10 +1,10 @@
 <html>
     <head>
         <script type="module">
-            import * as kaspa from './kaspa-rpc/kaspa-rpc.js';
+            import * as vecno from './vecno-rpc/vecno-rpc.js';
             (async () => {
-                await kaspa.default('./kaspa-rpc/kaspa-rpc_bg.wasm');
-                console.log(kaspa.version());
+                await vecno.default('./vecno-rpc/vecno-rpc_bg.wasm');
+                console.log(vecno.version());
             })();
         </script>
     </head>

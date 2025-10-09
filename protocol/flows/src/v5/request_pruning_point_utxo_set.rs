@@ -1,13 +1,13 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow, v5::ibd::IBD_BATCH_SIZE};
 use itertools::Itertools;
-use kaspa_consensus_core::errors::consensus::ConsensusError;
-use kaspa_core::debug;
-use kaspa_hashes::Hash;
-use kaspa_p2p_lib::{
+use vecno_consensus_core::errors::consensus::ConsensusError;
+use vecno_core::debug;
+use vecno_hashes::Hash;
+use vecno_p2p_lib::{
     common::ProtocolError,
     dequeue, make_message,
     pb::{
-        kaspad_message::Payload, DonePruningPointUtxoSetChunksMessage, PruningPointUtxoSetChunkMessage, UnexpectedPruningPointMessage,
+        vecnod_message::Payload, DonePruningPointUtxoSetChunksMessage, PruningPointUtxoSetChunkMessage, UnexpectedPruningPointMessage,
     },
     IncomingRoute, Router,
 };

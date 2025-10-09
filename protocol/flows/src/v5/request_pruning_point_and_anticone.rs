@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
 use itertools::Itertools;
-use kaspa_p2p_lib::{
+use vecno_p2p_lib::{
     common::ProtocolError,
     dequeue, dequeue_with_request_id, make_response,
     pb::{
-        self, kaspad_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
+        self, vecnod_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
         TrustedDataMessage,
     },
     IncomingRoute, Router,
@@ -74,7 +74,7 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                     let block = session.async_get_block(hash).await?;
                     self.router
                         .enqueue(make_response!(
-                            Payload::BlockWithTrustedDataV4,
+                            Payload::BlockWithTrustedData,
                             BlockWithTrustedDataMessage { block: Some((&block).into())},
                             request_id
                         ))

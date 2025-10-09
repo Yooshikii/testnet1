@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     blockhash::{self, BlockHashExtensions, BlockHashes},
     config::params::ForkedParam,
     BlockHashMap, BlockLevel, BlueWorkType, HashMapCustomHasher,
 };
-use kaspa_hashes::Hash;
-use kaspa_utils::refs::Refs;
+use vecno_hashes::Hash;
+use vecno_utils::refs::Refs;
 
 use crate::{
     model::{

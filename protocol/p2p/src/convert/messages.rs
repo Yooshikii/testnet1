@@ -7,13 +7,13 @@ use super::{
     option::TryIntoOptionEx,
 };
 use crate::pb as protowire;
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     header::Header,
     pruning::{PruningPointProof, PruningPointsList},
     tx::{TransactionId, TransactionOutpoint, UtxoEntry},
 };
-use kaspa_hashes::Hash;
-use kaspa_utils::networking::{IpAddress, PeerId};
+use vecno_hashes::Hash;
+use vecno_utils::networking::{IpAddress, PeerId};
 
 use std::{collections::HashMap, sync::Arc};
 

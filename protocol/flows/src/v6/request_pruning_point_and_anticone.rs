@@ -1,14 +1,14 @@
 //!
 //! In v6 of the P2P protocol we dropped the filling of DAA and GHOSTDAG indices for each trusted entry
-//! since the syncee no longer uses them in the rusty-kaspa design where the full sub-DAG is sent
+//! since the syncee no longer uses them in the vecnod design where the full sub-DAG is sent
 //!
 
 use itertools::Itertools;
-use kaspa_p2p_lib::{
+use vecno_p2p_lib::{
     common::ProtocolError,
     dequeue, dequeue_with_request_id, make_response,
     pb::{
-        self, kaspad_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
+        self, vecnod_message::Payload, BlockWithTrustedDataMessage, DoneBlocksWithTrustedDataMessage, PruningPointsMessage,
         TrustedDataMessage,
     },
     IncomingRoute, Router,
@@ -74,7 +74,7 @@ impl PruningPointAndItsAnticoneRequestsFlow {
                     let block = session.async_get_block(hash).await?;
                     self.router
                         .enqueue(make_response!(
-                            Payload::BlockWithTrustedDataV4,
+                            Payload::BlockWithTrustedData,
                             // No need to send window indices in v6
                             BlockWithTrustedDataMessage { block: Some((&block).into()), ..Default::default() },
                             request_id

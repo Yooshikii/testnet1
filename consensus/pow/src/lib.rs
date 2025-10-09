@@ -1,8 +1,8 @@
 use std::cmp::max;
 use crate::mem_hash::mem_hash;
-use kaspa_consensus_core::{hashing, header::Header, BlockLevel};
-use kaspa_hashes::{PowHash};
-use kaspa_math::Uint256;
+use vecno_consensus_core::{hashing, header::Header, BlockLevel};
+use vecno_hashes::{PowHash};
+use vecno_math::Uint256;
 
 // public for benchmarks
 #[doc(hidden)]

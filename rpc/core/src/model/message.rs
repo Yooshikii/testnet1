@@ -1,9 +1,9 @@
 use crate::model::*;
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_consensus_core::api::stats::BlockCount;
-use kaspa_core::debug;
-use kaspa_notify::subscription::{context::SubscriptionContext, single::UtxosChangedSubscription, Command};
-use kaspa_utils::hex::ToHex;
+use vecno_consensus_core::api::stats::BlockCount;
+use vecno_core::debug;
+use vecno_notify::subscription::{context::SubscriptionContext, single::UtxosChangedSubscription, Command};
+use vecno_utils::hex::ToHex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::{
@@ -119,7 +119,7 @@ impl Deserializer for SubmitBlockResponse {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GetBlockTemplateRequest {
-    /// Which kaspa address should the coinbase block reward transaction pay into
+    /// Which vecno address should the coinbase block reward transaction pay into
     pub pay_address: RpcAddress,
     // TODO: replace with hex serialization
     pub extra_data: RpcExtraData,
@@ -155,9 +155,9 @@ impl Deserializer for GetBlockTemplateRequest {
 pub struct GetBlockTemplateResponse {
     pub block: RpcRawBlock,
 
-    /// Whether kaspad thinks that it's synced.
-    /// Callers are discouraged (but not forbidden) from solving blocks when kaspad is not synced.
-    /// That is because when kaspad isn't in sync with the rest of the network there's a high
+    /// Whether vecnod thinks that it's synced.
+    /// Callers are discouraged (but not forbidden) from solving blocks when vecnod is not synced.
+    /// That is because when vecnod isn't in sync with the rest of the network there's a high
     /// chance the block will never be accepted, thus the solving effort would have been wasted.
     pub is_synced: bool,
 }
@@ -1753,21 +1753,21 @@ impl Deserializer for GetCoinSupplyRequest {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GetCoinSupplyResponse {
-    pub max_sompi: u64,
-    pub circulating_sompi: u64,
+    pub max_veni: u64,
+    pub circulating_veni: u64,
 }
 
 impl GetCoinSupplyResponse {
-    pub fn new(max_sompi: u64, circulating_sompi: u64) -> Self {
-        Self { max_sompi, circulating_sompi }
+    pub fn new(max_veni: u64, circulating_veni: u64) -> Self {
+        Self { max_veni, circulating_veni }
     }
 }
 
 impl Serializer for GetCoinSupplyResponse {
     fn serialize<W: std::io::Write>(&self, writer: &mut W) -> std::io::Result<()> {
         store!(u16, &1, writer)?;
-        store!(u64, &self.max_sompi, writer)?;
-        store!(u64, &self.circulating_sompi, writer)?;
+        store!(u64, &self.max_veni, writer)?;
+        store!(u64, &self.circulating_veni, writer)?;
 
         Ok(())
     }
@@ -1776,10 +1776,10 @@ impl Serializer for GetCoinSupplyResponse {
 impl Deserializer for GetCoinSupplyResponse {
     fn deserialize<R: std::io::Read>(reader: &mut R) -> std::io::Result<Self> {
         let _version = load!(u16, reader)?;
-        let max_sompi = load!(u64, reader)?;
-        let circulating_sompi = load!(u64, reader)?;
+        let max_veni = load!(u64, reader)?;
+        let circulating_veni = load!(u64, reader)?;
 
-        Ok(Self { max_sompi, circulating_sompi })
+        Ok(Self { max_veni, circulating_veni })
     }
 }
 
@@ -3057,7 +3057,7 @@ impl Deserializer for FinalityConflictResolvedNotification {
 //
 // If `addresses` is empty, the notifications will start or stop for all addresses.
 //
-// This call is only available when this kaspad was started with `--utxoindex`
+// This call is only available when this vecnod was started with `--utxoindex`
 //
 // See: UtxosChangedNotification
 #[derive(Clone, Debug, Serialize, Deserialize)]

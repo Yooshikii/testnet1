@@ -1,5 +1,5 @@
 //!
-//! Kaspa core wallet account variant implementations.
+//! Vecno core wallet account variant implementations.
 //!
 
 pub mod bip32;

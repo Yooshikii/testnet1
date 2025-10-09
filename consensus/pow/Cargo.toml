@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-pow"
-description = "Kaspa proof-of-work"
+name = "vecno-pow"
+description = "Vecno proof-of-work"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -15,11 +15,11 @@ wasm32-sdk = []
 [dependencies]
 js-sys.workspace = true
 blake3.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-utils.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-client.workspace = true
+vecno-hashes.workspace = true
+vecno-math.workspace = true
+vecno-utils.workspace = true
 wasm-bindgen.workspace = true
 workflow-wasm.workspace = true
 num.workspace = true

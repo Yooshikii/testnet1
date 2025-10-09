@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wasm"
-description = "KASPA WASM bindings"
+name = "vecno-wasm"
+description = "Vecno WASM bindings"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -17,21 +17,21 @@ crate-type = ["cdylib"]
 [dependencies]
 cfg-if.workspace = true
 js-sys.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-math.workspace = true
-kaspa-pow.workspace = true
-kaspa-txscript.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wasm-core.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wallet-keys.workspace = true
-kaspa-wrpc-client.workspace = true
-kaspa-wrpc-wasm.workspace = true
+vecno-addresses.workspace = true
+vecno-bip32.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-wasm.workspace = true
+vecno-core.workspace = true
+vecno-math.workspace = true
+vecno-pow.workspace = true
+vecno-txscript.workspace = true
+vecno-rpc-core.workspace = true
+vecno-utils.workspace = true
+vecno-wasm-core.workspace = true
+vecno-wallet-core.workspace = true
+vecno-wallet-keys.workspace = true
+vecno-wrpc-client.workspace = true
+vecno-wrpc-wasm.workspace = true
 num.workspace = true
 wasm-bindgen.workspace = true
 workflow-log.workspace = true
@@ -40,20 +40,20 @@ workflow-wasm.workspace = true
 
 [features]
 wasm32-sdk = [
-    "kaspa-wallet-core/wasm32-sdk",
-    "kaspa-pow/wasm32-sdk",
-    "kaspa-txscript/wasm32-sdk",
+    "vecno-wallet-core/wasm32-sdk",
+    "vecno-pow/wasm32-sdk",
+    "vecno-txscript/wasm32-sdk",
 ]
 wasm32-core = [
-    "kaspa-wallet-core/wasm32-core",
-    "kaspa-pow/wasm32-sdk",
-    "kaspa-txscript/wasm32-sdk",
+    "vecno-wallet-core/wasm32-core",
+    "vecno-pow/wasm32-sdk",
+    "vecno-txscript/wasm32-sdk",
 ]
 wasm32-rpc = [
-    "kaspa-consensus-core/wasm32-sdk",
-    "kaspa-consensus-wasm/wasm32-sdk",
-    "kaspa-wrpc-client/wasm32-sdk",
-    "kaspa-wrpc-wasm/wasm32-sdk",
+    "vecno-consensus-core/wasm32-sdk",
+    "vecno-consensus-wasm/wasm32-sdk",
+    "vecno-wrpc-client/wasm32-sdk",
+    "vecno-wrpc-wasm/wasm32-sdk",
 ]
 wasm32-keygen = []
 default = []
@@ -63,8 +63,8 @@ targets = ["wasm32-unknown-unknown"]
 
 [package.metadata.emanate.wasm]
 targets = [
-    { target = "nodejs", out-dir = "nodejs/kaspa" },
-    { target = "web", out-dir = "web/kaspa" },
+    { target = "nodejs", out-dir = "nodejs/vecno" },
+    { target = "web", out-dir = "web/vecno" },
 ]
 folder = "setup"
 

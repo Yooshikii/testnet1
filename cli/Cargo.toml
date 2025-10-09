@@ -1,7 +1,7 @@
 [package]
-name = "kaspa-cli"
-description = "Kaspa CLI"
-keywords = ["kaspa", "wallet", "cli", "rpc"]
+name = "vecno-cli"
+description = "Vecno CLI"
+keywords = ["vecno", "wallet", "cli", "rpc"]
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -20,7 +20,7 @@ include = [
 default = []
 
 [lib]
-name = "kaspa_cli_lib"
+name = "vecno_cli_lib"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
@@ -34,18 +34,18 @@ faster-hex.workspace = true
 futures.workspace = true
 js-sys.workspace = true
 hex.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-daemon.workspace = true
-kaspa-metrics-core.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wallet-keys.workspace = true
-kaspa-wallet-pskt.workspace = true
-kaspa-wrpc-client.workspace = true
+vecno-addresses.workspace = true
+vecno-bip32.workspace = true
+vecno-consensus-core.workspace = true
+vecno-core.workspace = true
+vecno-daemon.workspace = true
+vecno-metrics-core.workspace = true
+vecno-rpc-core.workspace = true
+vecno-utils.workspace = true
+vecno-wallet-core.workspace = true
+vecno-wallet-keys.workspace = true
+vecno-wallet-pskt.workspace = true
+vecno-wrpc-client.workspace = true
 nw-sys.workspace = true
 pad.workspace = true
 regex.workspace = true

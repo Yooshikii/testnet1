@@ -1,13 +1,13 @@
 use js_sys::BigInt;
 use num::Float;
-use kaspa_consensus_client::Header;
-use kaspa_consensus_client::HeaderT;
-use kaspa_consensus_core::hashing;
-use kaspa_hashes::Hash;
-use kaspa_hashes::PowHash;
-use kaspa_math::Uint256;
-use kaspa_utils::hex::FromHex;
-use kaspa_utils::hex::ToHex;
+use vecno_consensus_client::Header;
+use vecno_consensus_client::HeaderT;
+use vecno_consensus_core::hashing;
+use vecno_hashes::Hash;
+use vecno_hashes::PowHash;
+use vecno_math::Uint256;
+use vecno_utils::hex::FromHex;
+use vecno_utils::hex::ToHex;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::TryCastFromJs;
 use workflow_wasm::error::Error;
@@ -22,7 +22,7 @@ extern "C" {
     pub type WorkT;
 }
 
-/// Represents a kaspa header PoW manager
+/// Represents a vecno header PoW manager
 /// @category Mining
 #[wasm_bindgen(inspectable)]
 pub struct PoW {

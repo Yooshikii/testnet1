@@ -6,12 +6,12 @@
 use crate::error::RpcError as Error;
 use crate::error::RpcResult as Result;
 use crate::model::*;
-use kaspa_addresses::Address;
-use kaspa_addresses::AddressOrStringArrayT;
-use kaspa_consensus_client::Transaction;
-use kaspa_consensus_client::UtxoEntryReference;
-use kaspa_consensus_core::tx as cctx;
-use kaspa_rpc_macros::declare_typescript_wasm_interface as declare;
+use vecno_addresses::Address;
+use vecno_addresses::AddressOrStringArrayT;
+use vecno_consensus_client::Transaction;
+use vecno_consensus_client::UtxoEntryReference;
+use vecno_consensus_core::tx as cctx;
+use vecno_rpc_macros::declare_typescript_wasm_interface as declare;
 pub use serde_wasm_bindgen::from_value;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::*;
@@ -173,8 +173,8 @@ declare! {
      * @category Node RPC
      */
     export interface IGetCoinSupplyResponse {
-        maxSompi: bigint;
-        circulatingSompi: bigint;
+        maxVeni: bigint;
+        circulatingVeni: bigint;
     }
     "#,
 }
@@ -1562,7 +1562,7 @@ declare! {
         /**
          * *Top-priority* feerate bucket. Provides an estimation of the feerate required for sub-second DAG inclusion.
          *
-         * Note: for all buckets, feerate values represent fee/mass of a transaction in `sompi/gram` units.
+         * Note: for all buckets, feerate values represent fee/mass of a transaction in `veni/gram` units.
          * Given a feerate value recommendation, calculate the required fee by
          * taking the transaction mass and multiplying it by feerate: `fee = feerate * mass(tx)`
          */

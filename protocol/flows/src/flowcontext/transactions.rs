@@ -1,10 +1,10 @@
 use super::process_queue::ProcessQueue;
 use itertools::Itertools;
-use kaspa_consensus_core::tx::TransactionId;
-use kaspa_core::debug;
-use kaspa_p2p_lib::{
+use vecno_consensus_core::tx::TransactionId;
+use vecno_core::debug;
+use vecno_p2p_lib::{
     make_message,
-    pb::{kaspad_message::Payload, InvTransactionsMessage, KaspadMessage},
+    pb::{vecnod_message::Payload, InvTransactionsMessage, VecnodMessage},
     Hub,
 };
 use std::time::{Duration, Instant};
@@ -74,8 +74,6 @@ impl TransactionsSpread {
     /// The broadcast itself may happen only during a subsequent call to this function since it is done at most
     /// every `BROADCAST_INTERVAL` milliseconds or when the queue length is larger than the Inv message
     /// capacity.
-    ///
-    /// _GO-KASPAD: EnqueueTransactionIDsForPropagation_
     pub async fn broadcast_transactions<I: IntoIterator<Item = TransactionId>>(&mut self, transaction_ids: I, should_throttle: bool) {
         self.transaction_ids.enqueue_chunk(transaction_ids);
 
@@ -94,7 +92,7 @@ impl TransactionsSpread {
         self.last_broadcast_time = Instant::now();
     }
 
-    async fn broadcast(&self, msg: KaspadMessage, should_throttle: bool) {
+    async fn broadcast(&self, msg: VecnodMessage, should_throttle: bool) {
         if should_throttle {
             // TODO: Figure out a better number
             self.hub.broadcast_to_some_peers(msg, 8).await

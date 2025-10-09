@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-grpc-client"
-description = "Kaspa gRPC client"
+name = "vecno-grpc-client"
+description = "Vecno gRPC client"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,12 +10,12 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-grpc-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
+vecno-core.workspace = true
+vecno-grpc-core.workspace = true
+vecno-notify.workspace = true
+vecno-rpc-core.workspace = true
+vecno-utils.workspace = true
+vecno-utils-tower.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true

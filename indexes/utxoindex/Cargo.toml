@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-utxoindex"
-description = "Kaspa UTXO index"
+name = "vecno-utxoindex"
+description = "Vecno UTXO index"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -11,13 +11,13 @@ repository.workspace = true
 
 [dependencies]
 futures.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-utils.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-database.workspace = true
+vecno-hashes.workspace = true
+vecno-index-core.workspace = true
+vecno-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rocksdb.workspace = true
@@ -25,7 +25,7 @@ serde.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
-kaspa-consensus.workspace = true
+vecno-consensus.workspace = true
 rand = { workspace = true, features = ["small_rng"] }
 
 [lints]

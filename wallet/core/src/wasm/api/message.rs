@@ -9,7 +9,7 @@ use crate::wasm::api::keydata::PrvKeyDataVariantKind;
 use crate::wasm::tx::fees::IFees;
 use crate::wasm::tx::GeneratorSummary;
 use js_sys::Array;
-use kaspa_wallet_macros::declare_typescript_wasm_interface as declare;
+use vecno_wallet_macros::declare_typescript_wasm_interface as declare;
 use serde_wasm_bindgen::from_value;
 use workflow_wasm::serde::to_value;
 
@@ -28,7 +28,7 @@ macro_rules! try_from {
 const TS_CATEGORY_WALLET: &'static str = r#"
 /**
  * @categoryDescription Wallet API
- * Wallet API for interfacing with Rusty Kaspa Wallet implementation.
+ * Wallet API for interfacing with Vecnod Wallet implementation.
  */
 "#;
 
@@ -380,7 +380,7 @@ declare! {
      * 
      * If filename is not supplied, the filename will be derived from the wallet title.
      * If both wallet title and filename are not supplied, the wallet will be create
-     * with the default filename `kaspa`.
+     * with the default filename `vecno`.
      * 
      * @category Wallet API
      */
@@ -1054,7 +1054,7 @@ declare! {
         paymentSecret?:string;
     } | {
         walletSecret: string;
-        type: "kaspa-keypair-standard";
+        type: "vecno-keypair-standard";
         accountName:string;
         prvKeyDataId:string;
         paymentSecret?:string;
@@ -1100,7 +1100,7 @@ try_from! (args: IAccountsCreateRequest, AccountsCreateRequest, {
             }
         }
         _ => {
-            return Err(Error::custom("only BIP32/kaspa-keypair-standard accounts are currently supported"));
+            return Err(Error::custom("only BIP32/vecno-keypair-standard accounts are currently supported"));
         }
     };
 
@@ -1401,13 +1401,13 @@ declare! {
          */
         paymentSecret? : string;
         /**
-         * Fee rate in sompi per 1 gram of mass.
+         * Fee rate in veni per 1 gram of mass.
          */
         feeRate? : number;
         /**
          * Priority fee.
          */
-        priorityFeeSompi? : IFees | bigint;
+        priorityFeeVeni? : IFees | bigint;
         /**
          * 
          */
@@ -1425,14 +1425,14 @@ try_from! ( args: IAccountsSendRequest, AccountsSendRequest, {
     let wallet_secret = args.get_secret("walletSecret")?;
     let payment_secret = args.try_get_secret("paymentSecret")?;
     let fee_rate = args.get_f64("feeRate").ok();
-    let priority_fee_sompi = args.get::<IFees>("priorityFeeSompi")?.try_into()?;
+    let priority_fee_veni = args.get::<IFees>("priorityFeeVeni")?.try_into()?;
     let payload = args.try_get_value("payload")?.map(|v| v.try_as_vec_u8()).transpose()?;
 
     let outputs = args.get_value("destination")?;
     let destination: PaymentDestination =
         if outputs.is_undefined() { PaymentDestination::Change } else { PaymentOutputs::try_owned_from(outputs)?.into() };
 
-    Ok(AccountsSendRequest { account_id, wallet_secret, payment_secret, fee_rate, priority_fee_sompi, destination, payload })
+    Ok(AccountsSendRequest { account_id, wallet_secret, payment_secret, fee_rate, priority_fee_veni, destination, payload })
 });
 
 declare! {
@@ -1658,7 +1658,7 @@ declare! {
     export interface IAccountsGetUtxosRequest {
         accountId : HexString;
         addresses : Address[] | string[];
-        minAmountSompi? : bigint;
+        minAmountVeni? : bigint;
     }
     "#,
 }
@@ -1666,8 +1666,8 @@ declare! {
 try_from! ( args: IAccountsGetUtxosRequest, AccountsGetUtxosRequest, {
     let account_id = args.get_account_id("accountId")?;
     let addresses = args.try_get_addresses("addresses")?;
-    let min_amount_sompi = args.get_u64("minAmountSompi").ok();
-    Ok(AccountsGetUtxosRequest { account_id, addresses, min_amount_sompi })
+    let min_amount_veni = args.get_u64("minAmountVeni").ok();
+    Ok(AccountsGetUtxosRequest { account_id, addresses, min_amount_veni })
 });
 
 declare! {
@@ -1710,8 +1710,8 @@ declare! {
         walletSecret : string;
         paymentSecret? : string;
         feeRate? : number;
-        priorityFeeSompi? : IFees | bigint;
-        transferAmountSompi : bigint;
+        priorityFeeVeni? : IFees | bigint;
+        transferAmountVeni : bigint;
     }
     "#,
 }
@@ -1722,8 +1722,8 @@ try_from! ( args: IAccountsTransferRequest, AccountsTransferRequest, {
     let wallet_secret = args.get_secret("walletSecret")?;
     let payment_secret = args.try_get_secret("paymentSecret")?;
     let fee_rate = args.get_f64("feeRate").ok();
-    let priority_fee_sompi = args.try_get::<IFees>("priorityFeeSompi")?.map(Fees::try_from).transpose()?;
-    let transfer_amount_sompi = args.get_u64("transferAmountSompi")?;
+    let priority_fee_veni = args.try_get::<IFees>("priorityFeeVeni")?.map(Fees::try_from).transpose()?;
+    let transfer_amount_veni = args.get_u64("transferAmountVeni")?;
 
     Ok(AccountsTransferRequest {
         source_account_id,
@@ -1731,8 +1731,8 @@ try_from! ( args: IAccountsTransferRequest, AccountsTransferRequest, {
         wallet_secret,
         payment_secret,
         fee_rate,
-        priority_fee_sompi,
-        transfer_amount_sompi,
+        priority_fee_veni,
+        transfer_amount_veni,
     })
 });
 
@@ -1772,7 +1772,7 @@ declare! {
         accountId : HexString;
         destination : IPaymentOutput[];
         feeRate? : number;
-        priorityFeeSompi : IFees | bigint;
+        priorityFeeVeni : IFees | bigint;
         payload? : Uint8Array | string;
     }
     "#,
@@ -1781,14 +1781,14 @@ declare! {
 try_from! ( args: IAccountsEstimateRequest, AccountsEstimateRequest, {
     let account_id = args.get_account_id("accountId")?;
     let fee_rate = args.get_f64("feeRate").ok();
-    let priority_fee_sompi = args.get::<IFees>("priorityFeeSompi")?.try_into()?;
+    let priority_fee_veni = args.get::<IFees>("priorityFeeVeni")?.try_into()?;
     let payload = args.try_get_value("payload")?.map(|v| v.try_as_vec_u8()).transpose()?;
 
     let outputs = args.get_value("destination")?;
     let destination: PaymentDestination =
         if outputs.is_undefined() { PaymentDestination::Change } else { PaymentOutputs::try_owned_from(outputs)?.into() };
 
-    Ok(AccountsEstimateRequest { account_id, fee_rate, priority_fee_sompi, destination, payload })
+    Ok(AccountsEstimateRequest { account_id, fee_rate, priority_fee_veni, destination, payload })
 });
 
 declare! {
@@ -2172,7 +2172,7 @@ declare! {
      * 
      * The selected address will also be used to spend reveal transaction to.
      * 
-     * The default revealFeeSompi is 100_000 sompi.
+     * The default revealFeeVeni is 100_000 veni.
      *  
      * @category Wallet API
      */
@@ -2182,10 +2182,10 @@ declare! {
         addressIndex : number;
         scriptSig : Uint8Array | HexString;
         walletSecret : string;
-        commitAmountSompi : bigint;
+        commitAmountVeni : bigint;
         paymentSecret? : string;
         feeRate? : number;
-        revealFeeSompi : bigint;
+        revealFeeVeni : bigint;
         payload? : Uint8Array | HexString;
     }
     "#,
@@ -2205,10 +2205,10 @@ try_from! ( args: IAccountsCommitRevealRequest, AccountsCommitRevealRequest, {
     let script_sig = args.get_vec_u8("scriptSig")?;
     let wallet_secret = args.get_secret("walletSecret")?;
     let payment_secret = args.try_get_secret("paymentSecret")?;
-    let commit_amount_sompi = args.get_u64("commitAmountSompi")?;
+    let commit_amount_veni = args.get_u64("commitAmountVeni")?;
     let fee_rate = args.get_f64("feeRate").ok();
 
-    let reveal_fee_sompi = args.get_u64("revealFeeSompi")?;
+    let reveal_fee_veni = args.get_u64("revealFeeVeni")?;
 
     let payload = args.try_get_value("payload")?.map(|v| v.try_as_vec_u8()).transpose()?;
 
@@ -2219,9 +2219,9 @@ try_from! ( args: IAccountsCommitRevealRequest, AccountsCommitRevealRequest, {
         script_sig,
         wallet_secret,
         payment_secret,
-        commit_amount_sompi,
+        commit_amount_veni,
         fee_rate,
-        reveal_fee_sompi,
+        reveal_fee_veni,
         payload,
     })
 });
@@ -2261,10 +2261,10 @@ declare! {
      * The scriptSig will be used to spend the UTXO of the first transaction and
      * must therefore match the startDestination output P2SH.
      * 
-     * Set revealFeeSompi or reflect the reveal fee transaction on endDestination
+     * Set revealFeeVeni or reflect the reveal fee transaction on endDestination
      * output amount. 
      * 
-     * The default revealFeeSompi is 100_000 sompi.
+     * The default revealFeeVeni is 100_000 veni.
      * 
      * @category Wallet API
      */
@@ -2276,7 +2276,7 @@ declare! {
         walletSecret : string;
         paymentSecret? : string;
         feeRate? : number;
-        revealFeeSompi : bigint;
+        revealFeeVeni : bigint;
         payload? : Uint8Array | HexString;
     }
     "#,
@@ -2297,7 +2297,7 @@ try_from! ( args: IAccountsCommitRevealManualRequest, AccountsCommitRevealManual
     if reveal_output.is_undefined() { PaymentDestination::Change } else { PaymentOutputs::try_owned_from(reveal_output)?.into() };
 
     let fee_rate = args.get_f64("feeRate").ok();
-    let reveal_fee_sompi = args.get_u64("revealFeeSompi")?;
+    let reveal_fee_veni = args.get_u64("revealFeeVeni")?;
 
     let payload = args.try_get_value("payload")?.map(|v| v.try_as_vec_u8()).transpose()?;
 
@@ -2309,7 +2309,7 @@ try_from! ( args: IAccountsCommitRevealManualRequest, AccountsCommitRevealManual
         start_destination,
         end_destination,
         fee_rate,
-        reveal_fee_sompi,
+        reveal_fee_veni,
         payload,
     })
 });

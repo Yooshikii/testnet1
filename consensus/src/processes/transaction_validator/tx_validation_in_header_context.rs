@@ -7,7 +7,7 @@ use super::{
     TransactionValidator,
 };
 use crate::constants::LOCK_TIME_THRESHOLD;
-use kaspa_consensus_core::tx::Transaction;
+use vecno_consensus_core::tx::Transaction;
 
 pub(crate) enum LockTimeType {
     Finalized,

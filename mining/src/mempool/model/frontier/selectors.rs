@@ -1,5 +1,5 @@
 use crate::Policy;
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     block::TemplateTransactionSelector,
     tx::{Transaction, TransactionId},
 };

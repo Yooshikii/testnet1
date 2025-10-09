@@ -1,12 +1,12 @@
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     tx::{ScriptPublicKeys, TransactionOutpoint},
     utxo::utxo_diff::UtxoDiff,
     BlockHashSet,
 };
-use kaspa_consensusmanager::spawn_blocking;
-use kaspa_database::prelude::StoreResult;
-use kaspa_hashes::Hash;
-use kaspa_index_core::indexed_utxos::BalanceByScriptPublicKey;
+use vecno_consensusmanager::spawn_blocking;
+use vecno_database::prelude::StoreResult;
+use vecno_hashes::Hash;
+use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
 use parking_lot::RwLock;
 use std::{collections::HashSet, fmt::Debug, sync::Arc};
 

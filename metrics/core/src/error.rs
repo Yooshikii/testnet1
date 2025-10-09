@@ -1,4 +1,4 @@
-use kaspa_rpc_core::RpcError;
+use vecno_rpc_core::RpcError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]

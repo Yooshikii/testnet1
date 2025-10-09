@@ -1,14 +1,14 @@
 //!
-//! # Kaspa Wallet Core
+//! # Vecno Wallet Core
 //!
-//! Multi-platform Rust framework for Kaspa Wallet.
+//! Multi-platform Rust framework for Vecno Wallet.
 //!
 //! This framework provides a series of APIs and primitives
 //! to simplify building applications that interface with
-//! the Kaspa p2p network.
+//! the Vecnod p2p network.
 //!
 //! For key generation and derivation, please see the
-//! [`kaspa_wallet_keys`] crate.
+//! [`vecno_wallet_keys`] crate.
 //!
 //! This crate included are low-level primitives
 //! such as [`UtxoProcessor`](crate::utxo::UtxoProcessor)
@@ -34,43 +34,32 @@
 //! allowed transaction mass.
 //!
 //! Key generation and derivation is available in the
-//! [`kaspa_wallet_keys`] crate.
+//! [`vecno_wallet_keys`] crate.
 //!
 //! The framework can operate
 //! within native Rust applications as well as within NodeJS, Bun
 //! and browser environments via the WASM32 SDK.
 //!
-//! WASM32 SDK documentation is available at:
-//! <https://kaspa.aspectron.org/docs/>
-//!
-//! For NodeJS JavaScript and TypeScript environments, there are two
-//! available NPM modules:
-//! - <https://www.npmjs.com/package/kaspa>
-//! - <https://www.npmjs.com/package/kaspa-wasm>
-//!
 //! NOTE: for security reasons (to mitigate potential upstream vendor
 //! attacks) it is always recommended to build WASM SDK from source or
 //! download pre-built redistributables.
 //!
-//! Latest development builds of the WASM32 SDK can be found at:
-//! <https://aspectron.org/en/projects/kaspa-wasm.html>
-//!
-//! The `kaspa-wasm` module is a pure WASM32 module that includes
+//! The `vecno-wasm` module is a pure WASM32 module that includes
 //! the entire wallet framework, but does not support RPC due to an absence
 //! of a native WebSocket in NodeJs environment, while
-//! the `kaspa` module includes `websocket` module dependency simulating
+//! the `vecno` module includes `websocket` module dependency simulating
 //! the W3C WebSocket and thus supports RPC.
 //!
 //! JavaScript examples for using this framework can be found at:
-//! <https://github.com/kaspanet/rusty-kaspa/tree/master/wasm/nodejs>
+//! <https://github.com/Vecno-Foundation/vecnod/tree/master/wasm/nodejs>
 //!
 //! For pre-built browser-compatible WASM32 redistributables of this
-//! framework please see the releases section of the Rusty Kaspa
-//! repository at <https://github.com/kaspanet/rusty-kaspa/releases>.
+//! framework please see the releases section of the Vecnod
+//! repository at <https://github.com/Vecno-Foundation/vecnod/releases>.
 //!
 
 extern crate alloc;
-extern crate self as kaspa_wallet_core;
+extern crate self as vecno_wallet_core;
 
 pub mod account;
 pub mod api;
@@ -106,7 +95,7 @@ pub fn version() -> String {
 
 /// Returns the version of the Wallet framework combined with short git hash.
 pub fn version_with_git_hash() -> String {
-    kaspa_utils::git::with_short_hash(env!("CARGO_PKG_VERSION")).to_string()
+    vecno_utils::git::with_short_hash(env!("CARGO_PKG_VERSION")).to_string()
 }
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-index-processor"
-description = "Kaspa index processor"
+name = "vecno-index-processor"
+description = "Vecno index processor"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,16 +10,16 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-utils.workspace = true
-kaspa-utxoindex.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-database.workspace = true
+vecno-hashes.workspace = true
+vecno-index-core.workspace = true
+vecno-notify.workspace = true
+vecno-utils.workspace = true
+vecno-utxoindex.workspace = true
 
 async-channel.workspace = true
 async-trait.workspace = true
@@ -32,7 +32,7 @@ tokio = { workspace = true, features = [ "rt-multi-thread", "macros", "signal" ]
 triggered.workspace = true
 
 [dev-dependencies]
-kaspa-consensus.workspace = true
+vecno-consensus.workspace = true
 parking_lot.workspace = true
 tokio = { workspace = true, features = ["rt", "macros"] }
 rand = {workspace = true,  features = [ "small_rng" ]}

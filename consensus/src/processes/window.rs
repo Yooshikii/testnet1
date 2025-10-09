@@ -7,16 +7,16 @@ use crate::{
     },
     processes::ghostdag::ordering::SortableBlock,
 };
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     blockhash::{BlockHashExtensions, ORIGIN},
     config::{genesis::GenesisBlock, params::ForkActivation},
     errors::{block::RuleError, difficulty::DifficultyResult},
     BlockHashSet, BlueWorkType, HashMapCustomHasher,
 };
-use kaspa_core::{info, log::CRESCENDO_KEYWORD};
-use kaspa_hashes::Hash;
-use kaspa_math::Uint256;
-use kaspa_utils::refs::Refs;
+use vecno_core::{info, log::CRESCENDO_KEYWORD};
+use vecno_hashes::Hash;
+use vecno_math::Uint256;
+use vecno_utils::refs::Refs;
 use once_cell::unsync::Lazy;
 use std::{
     cmp::Reverse,
@@ -292,7 +292,6 @@ enum SampledBlock {
     NonDaa(Hash),
 }
 
-/// A sampled window manager implementing [KIP-0004](https://github.com/kaspanet/kips/blob/master/kip-0004.md)
 #[derive(Clone)]
 pub struct SampledWindowManager<
     T: GhostdagStoreReader,
@@ -408,7 +407,6 @@ impl<T: GhostdagStoreReader, U: BlockWindowCacheReader + BlockWindowCacheWriter,
             Crescendo extended explanation
 
             Background: for the post-activation window we filter all previously non activated blocks.
-            See https://github.com/kaspanet/kips/blob/master/kip-0014.md#handling-difficulty-adjustment-during-the-transition
 
             We consider a block C to be not activated from the pov of this block (B) if either:
                 1. C's selected parent DAA score is below the activation threshold

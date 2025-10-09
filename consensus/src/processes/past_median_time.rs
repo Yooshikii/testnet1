@@ -1,6 +1,6 @@
 use crate::model::stores::{block_window_cache::BlockWindowHeap, headers::HeaderStoreReader};
-use kaspa_consensus_core::errors::block::RuleError;
-use kaspa_hashes::Hash;
+use vecno_consensus_core::errors::block::RuleError;
+use vecno_hashes::Hash;
 use std::sync::Arc;
 
 /// A past median manager conforming to the legacy golang implementation
@@ -28,8 +28,6 @@ impl<T: HeaderStoreReader> FullPastMedianTimeManager<T> {
     }
 }
 
-/// A past median time manager implementing [KIP-0004](https://github.com/kaspanet/kips/blob/master/kip-0004.md),
-/// so based on sampled windows
 #[derive(Clone)]
 pub struct SampledPastMedianTimeManager<T: HeaderStoreReader> {
     headers_store: Arc<T>,

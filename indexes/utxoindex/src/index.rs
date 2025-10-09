@@ -6,22 +6,22 @@ use crate::{
     update_container::UtxoIndexChanges,
     IDENT,
 };
-use kaspa_consensus_core::{tx::ScriptPublicKeys, utxo::utxo_diff::UtxoDiff, BlockHashSet};
-use kaspa_consensusmanager::{ConsensusManager, ConsensusResetHandler};
-use kaspa_core::{info, trace};
-use kaspa_database::prelude::{StoreError, StoreResult, DB};
-use kaspa_hashes::Hash;
-use kaspa_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use kaspa_utils::arc::ArcExtensions;
+use vecno_consensus_core::{tx::ScriptPublicKeys, utxo::utxo_diff::UtxoDiff, BlockHashSet};
+use vecno_consensusmanager::{ConsensusManager, ConsensusResetHandler};
+use vecno_core::{info, trace};
+use vecno_database::prelude::{StoreError, StoreResult, DB};
+use vecno_hashes::Hash;
+use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
+use vecno_utils::arc::ArcExtensions;
 use parking_lot::RwLock;
 use std::{
     fmt::Debug,
     sync::{Arc, Weak},
 };
 
-const RESYNC_CHUNK_SIZE: usize = 2048; //Increased from 1k (used in go-kaspad), for quicker resets, while still having a low memory footprint.
+const RESYNC_CHUNK_SIZE: usize = 2048; //Increased from 1k (used in go-vecnod), for quicker resets, while still having a low memory footprint.
 
-/// UtxoIndex indexes `CompactUtxoEntryCollections` by [`ScriptPublicKey`](kaspa_consensus_core::tx::ScriptPublicKey),
+/// UtxoIndex indexes `CompactUtxoEntryCollections` by [`ScriptPublicKey`](vecno_consensus_core::tx::ScriptPublicKey),
 /// commits them to its owns store, and emits changes.
 /// Note: The UtxoIndex struct by itself is not thread save, only correct usage of the supplied RwLock via `new` makes it so.
 /// please follow guidelines found in the comments under `utxoindex::core::api::UtxoIndexApi` for proper thread safety.
@@ -191,7 +191,7 @@ impl UtxoIndexApi for UtxoIndex {
     }
 
     // This can have a big memory footprint, so it should be used only for tests.
-    fn get_all_outpoints(&self) -> StoreResult<std::collections::HashSet<kaspa_consensus_core::tx::TransactionOutpoint>> {
+    fn get_all_outpoints(&self) -> StoreResult<std::collections::HashSet<vecno_consensus_core::tx::TransactionOutpoint>> {
         self.store.get_all_outpoints()
     }
 }

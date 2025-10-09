@@ -1,4 +1,4 @@
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     coinbase::*,
     config::params::ForkedParam,
     errors::coinbase::{CoinbaseError, CoinbaseResult},
@@ -71,7 +71,7 @@ impl CoinbaseManager {
     ) -> Self {
         // Precomputed subsidy by month table for the actual block per second rate
         // Here values are rounded up so that we keep the same number of rewarding months as in the original 1 BPS table.
-        // In a 10 BPS network, the induced increase in total rewards is 51 KAS (see tests::calc_high_bps_total_rewards_delta())
+        // In a 10 BPS network, the induced increase in total rewards is 51 VE (see tests::calc_high_bps_total_rewards_delta())
         let subsidy_by_month_table_before: SubsidyByMonthTable =
             core::array::from_fn(|i| SUBSIDY_BY_MONTH_TABLE[i].div_ceil(bps.before()));
         let subsidy_by_month_table_after: SubsidyByMonthTable =
@@ -280,7 +280,7 @@ impl CoinbaseManager {
 }
 
 /*
-    This table was pre-calculated by calling `calcDeflationaryPeriodBlockSubsidyFloatCalc` (in kaspad-go) for all months until reaching 0 subsidy.
+    This table was pre-calculated by calling `calcDeflationaryPeriodBlockSubsidyFloatCalc` (in vecnod-go) for all months until reaching 0 subsidy.
     To regenerate this table, run `TestBuildSubsidyTable` in coinbasemanager_test.go (note the `deflationaryPhaseBaseSubsidy` therein).
     These values represent the reward per second for each month (= reward per block for 1 BPS).
 */
@@ -318,9 +318,9 @@ const SUBSIDY_BY_MONTH_TABLE: [u64; 635] = [
 mod tests {
     use super::*;
     use crate::params::MAINNET_PARAMS;
-    use kaspa_consensus_core::{
+    use vecno_consensus_core::{
         config::params::{ForkActivation, Params, SIMNET_PARAMS},
-        constants::SOMPI_PER_KASPA,
+        constants::VENI_PER_VECNO,
         network::{NetworkId, NetworkType},
         tx::scriptvec,
     };
@@ -341,9 +341,9 @@ mod tests {
 
         let delta = total_high_bps_rewards as i64 - total_rewards as i64;
 
-        println!("Total rewards: {} sompi => {} KAS", total_rewards, total_rewards / SOMPI_PER_KASPA);
-        println!("Total high bps rewards: {} sompi => {} KAS", total_high_bps_rewards, total_high_bps_rewards / SOMPI_PER_KASPA);
-        println!("Delta: {} sompi => {} KAS", delta, delta / SOMPI_PER_KASPA as i64);
+        println!("Total rewards: {} veni => {} VE", total_rewards, total_rewards / VENI_PER_VECNO);
+        println!("Total high bps rewards: {} veni => {} VE", total_high_bps_rewards, total_high_bps_rewards / VENI_PER_VECNO);
+        println!("Delta: {} veni => {} VE", delta, delta / VENI_PER_VECNO as i64);
     }
 
     #[test]
@@ -375,7 +375,7 @@ mod tests {
     }
 
     /// Takes over 60 seconds, run with the following command line:
-    /// `cargo test --release --package kaspa-consensus --lib -- processes::coinbase::tests::verify_crescendo_emission_schedule --exact --nocapture --ignored`
+    /// `cargo test --release --package vecno-consensus --lib -- processes::coinbase::tests::verify_crescendo_emission_schedule --exact --nocapture --ignored`
     #[test]
     #[ignore = "long"]
     fn verify_crescendo_emission_schedule() {
@@ -405,9 +405,9 @@ mod tests {
                 println!("BASELINE:\t{}\tepochs, total emission: {}", baseline_epochs, baseline_total);
                 println!("CRESCENDO:\t{}\tepochs, total emission: {}, activation: {}", new_epochs, new_total, activation);
 
-                let diff = (new_total as i64 - baseline_total as i64) / SOMPI_PER_KASPA as i64;
+                let diff = (new_total as i64 - baseline_total as i64) / VENI_PER_VECNO as i64;
                 assert!(diff.abs() <= 51, "activation: {}", activation);
-                println!("DIFF (KAS): {}", diff);
+                println!("DIFF (VE): {}", diff);
             }
         }
     }

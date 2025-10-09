@@ -1,6 +1,6 @@
 use crate::{block::Block, header::Header, subnets::SUBNETWORK_ID_COINBASE, tx::Transaction};
-use kaspa_hashes::{Hash, ZERO_HASH};
-use kaspa_muhash::EMPTY_MUHASH;
+use vecno_hashes::{Hash, ZERO_HASH};
+use vecno_muhash::EMPTY_MUHASH;
 
 /// The constants uniquely representing the genesis block
 #[derive(Clone, Debug)]
@@ -114,7 +114,7 @@ pub const TESTNET_GENESIS: GenesisBlock = GenesisBlock {
         0x00, 0x00, // Script version
         0x01,                                                                         // Varint
         0x00,                                                                         // OP-FALSE
-        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x6e, 0x65, 0x74, // kaspa-testnet
+        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x6e, 0x65, 0x74, // vecno-testnet
     ],
 };
 
@@ -135,7 +135,7 @@ pub const TESTNET11_GENESIS: GenesisBlock = GenesisBlock {
         0x00, 0x00, // Script version
         0x01,                                                                         // Varint
         0x00,                                                                         // OP-FALSE
-        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x6e, 0x65, 0x74, // kaspa-testnet
+        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x6e, 0x65, 0x74, // vecno-testnet
         11, 4                                                                         // TN11, Relaunch 4
     ],
     ..TESTNET_GENESIS
@@ -163,7 +163,7 @@ pub const SIMNET_GENESIS: GenesisBlock = GenesisBlock {
         0x00, 0x00, // Script version
         0x01,                                                                   // Varint
         0x00,                                                                   // OP-FALSE
-        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x73, 0x69, 0x6d, 0x6e, 0x65, 0x74, // kaspa-simnet
+        0x6b, 0x61, 0x73, 0x70, 0x61, 0x2d, 0x73, 0x69, 0x6d, 0x6e, 0x65, 0x74, // vecno-simnet
     ],
 };
 

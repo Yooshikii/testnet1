@@ -14,8 +14,8 @@ use crate::utxo::{
     Maturity, NetworkParams, OutgoingTransaction, PendingUtxoEntryReference, UtxoContextBinding, UtxoEntryId, UtxoEntryReference,
     UtxoEntryReferenceExtension, UtxoProcessor,
 };
-use kaspa_consensus_client::UtxoEntry;
-use kaspa_hashes::Hash;
+use vecno_consensus_client::UtxoEntry;
+use vecno_hashes::Hash;
 use sorted_insert::SortedInsertBinaryByKey;
 
 static UTXO_CONTEXT_ID_SEQUENCER: AtomicU64 = AtomicU64::new(0);
@@ -756,17 +756,17 @@ impl UtxoContext {
         Ok(())
     }
 
-    pub async fn get_utxos(&self, addresses: Option<Vec<Address>>, min_amount_sompi: Option<u64>) -> Result<Vec<UtxoEntry>> {
+    pub async fn get_utxos(&self, addresses: Option<Vec<Address>>, min_amount_veni: Option<u64>) -> Result<Vec<UtxoEntry>> {
         let utxos = &self.context().mature;
         let mut amount = 0;
         if let Some(addresses) = &addresses {
-            if let Some(min_amount_sompi) = min_amount_sompi {
+            if let Some(min_amount_veni) = min_amount_veni {
                 let mut amount = 0;
                 let filtered_utxos = utxos
                     .iter()
                     .filter_map(|utxo| {
                         if let Some(address) = utxo.address() {
-                            if addresses.contains(&address) && amount < min_amount_sompi {
+                            if addresses.contains(&address) && amount < min_amount_veni {
                                 amount += utxo.amount();
                                 return Some(utxo.entry().clone());
                             }
@@ -791,11 +791,11 @@ impl UtxoContext {
                 return Ok(filtered_utxos);
             }
         }
-        if let Some(min_amount_sompi) = min_amount_sompi {
+        if let Some(min_amount_veni) = min_amount_veni {
             let filtered_utxos = utxos
                 .iter()
                 .filter_map(|utxo| {
-                    if amount < min_amount_sompi {
+                    if amount < min_amount_veni {
                         amount += utxo.amount();
                         return Some(utxo.entry().clone());
                     }

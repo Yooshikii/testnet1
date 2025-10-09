@@ -1,4 +1,4 @@
-use kaspa_consensus_core::tx::Transaction;
+use vecno_consensus_core::tx::Transaction;
 use std::sync::Arc;
 
 #[derive(Debug)]

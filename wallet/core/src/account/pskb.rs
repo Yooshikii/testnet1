@@ -1,6 +1,6 @@
 //!
 //! Tools for interfacing wallet accounts with PSKBs.
-//! (Partial Signed Kaspa Transaction Bundles).
+//! (Partial Signed Vecno Transaction Bundles).
 //!
 
 pub use crate::error::Error;
@@ -8,21 +8,21 @@ use crate::imports::*;
 use crate::tx::PaymentOutput;
 use crate::tx::PaymentOutputs;
 use futures::stream;
-use kaspa_bip32::{DerivationPath, KeyFingerprint, PrivateKey};
-use kaspa_consensus_client::UtxoEntry as ClientUTXO;
-use kaspa_consensus_core::hashing::sighash::{calc_schnorr_signature_hash, SigHashReusedValuesUnsync};
-use kaspa_consensus_core::tx::VerifiableTransaction;
-use kaspa_consensus_core::tx::{TransactionInput, UtxoEntry};
-use kaspa_txscript::extract_script_pub_key_address;
-use kaspa_txscript::opcodes::codes::OpData65;
-use kaspa_txscript::script_builder::ScriptBuilder;
-use kaspa_wallet_core::tx::{Generator, GeneratorSettings, PaymentDestination, PendingTransaction};
-pub use kaspa_wallet_pskt::bundle::Bundle;
-use kaspa_wallet_pskt::bundle::{script_sig_to_address, unlock_utxo_outputs_as_batch_transaction_pskb};
-use kaspa_wallet_pskt::prelude::lock_script_sig_templating_bytes;
-use kaspa_wallet_pskt::prelude::KeySource;
-use kaspa_wallet_pskt::prelude::{Finalizer, Inner, SignInputOk, Signature, Signer};
-pub use kaspa_wallet_pskt::pskt::{Creator, PSKT};
+use vecno_bip32::{DerivationPath, KeyFingerprint, PrivateKey};
+use vecno_consensus_client::UtxoEntry as ClientUTXO;
+use vecno_consensus_core::hashing::sighash::{calc_schnorr_signature_hash, SigHashReusedValuesUnsync};
+use vecno_consensus_core::tx::VerifiableTransaction;
+use vecno_consensus_core::tx::{TransactionInput, UtxoEntry};
+use vecno_txscript::extract_script_pub_key_address;
+use vecno_txscript::opcodes::codes::OpData65;
+use vecno_txscript::script_builder::ScriptBuilder;
+use vecno_wallet_core::tx::{Generator, GeneratorSettings, PaymentDestination, PendingTransaction};
+pub use vecno_wallet_pskt::bundle::Bundle;
+use vecno_wallet_pskt::bundle::{script_sig_to_address, unlock_utxo_outputs_as_batch_transaction_pskb};
+use vecno_wallet_pskt::prelude::lock_script_sig_templating_bytes;
+use vecno_wallet_pskt::prelude::KeySource;
+use vecno_wallet_pskt::prelude::{Finalizer, Inner, SignInputOk, Signature, Signer};
+pub use vecno_wallet_pskt::pskt::{Creator, PSKT};
 use secp256k1::schnorr;
 use secp256k1::{Message, PublicKey};
 use std::iter;
@@ -347,7 +347,7 @@ pub fn pskt_to_pending_transaction(
         },
         Err(e) => return Err(Error::PendingTransactionFromPSKTError(e.to_string())),
     };
-    let output: &Vec<kaspa_consensus_core::tx::TransactionOutput> = &signed_tx.outputs;
+    let output: &Vec<vecno_consensus_core::tx::TransactionOutput> = &signed_tx.outputs;
     if output.is_empty() {
         return Err(Error::Custom("0 outputs pskt is not supported".to_string()));
         // todo support 0 outputs
@@ -413,7 +413,7 @@ pub fn pskt_to_pending_transaction(
         1,
         0,
         0,
-        kaspa_wallet_core::tx::DataKind::Final,
+        vecno_wallet_core::tx::DataKind::Final,
     )?;
 
     Ok(pending_tx)
@@ -423,7 +423,7 @@ pub fn pskt_to_pending_transaction(
 // different parameters sets.
 pub enum CommitRevealBatchKind {
     Manual { hop_payment: PaymentDestination, destination_payment: PaymentDestination },
-    Parameterized { address: Address, commit_amount_sompi: u64 },
+    Parameterized { address: Address, commit_amount_veni: u64 },
 }
 
 struct BundleCommitRevealConfig {
@@ -437,7 +437,7 @@ struct BundleCommitRevealConfig {
 // Create signed atomic commit reveal PSKB.
 pub async fn commit_reveal_batch_bundle(
     batch_config: CommitRevealBatchKind,
-    reveal_fee_sompi: u64,
+    reveal_fee_veni: u64,
     script_sig: Vec<u8>,
     payload: Option<Vec<u8>>,
     fee_rate: Option<f64>,
@@ -473,18 +473,18 @@ pub async fn commit_reveal_batch_bundle(
                 payment_outputs,
             }
         }
-        CommitRevealBatchKind::Parameterized { address, commit_amount_sompi } => {
+        CommitRevealBatchKind::Parameterized { address, commit_amount_veni } => {
             let redeem_script = lock_script_sig_templating_bytes(script_sig.to_vec(), Some(&address.payload))
                 .map_err(|_| Error::RevealRedeemScriptTemplateError)?;
 
             let lock_address = script_sig_to_address(&redeem_script, network_id.into())?;
 
-            let amt_reveal: u64 = commit_amount_sompi - reveal_fee_sompi;
+            let amt_reveal: u64 = commit_amount_veni - reveal_fee_veni;
 
             BundleCommitRevealConfig {
                 address_commit: lock_address.clone(),
                 addresses_reveal: vec![address.clone()],
-                commit_destination: PaymentDestination::from(PaymentOutput::new(lock_address, commit_amount_sompi)),
+                commit_destination: PaymentDestination::from(PaymentOutput::new(lock_address, commit_amount_veni)),
                 redeem_script,
                 payment_outputs: PaymentOutputs { outputs: vec![PaymentOutput::new(address.clone(), amt_reveal)] },
             }

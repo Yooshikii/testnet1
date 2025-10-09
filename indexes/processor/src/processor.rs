@@ -3,18 +3,18 @@ use crate::{
     IDENT,
 };
 use async_trait::async_trait;
-use kaspa_consensus_notify::{notification as consensus_notification, notification::Notification as ConsensusNotification};
-use kaspa_core::{debug, trace};
-use kaspa_index_core::notification::{Notification, PruningPointUtxoSetOverrideNotification, UtxosChangedNotification};
-use kaspa_notify::{
+use vecno_consensus_notify::{notification as consensus_notification, notification::Notification as ConsensusNotification};
+use vecno_core::{debug, trace};
+use vecno_index_core::notification::{Notification, PruningPointUtxoSetOverrideNotification, UtxosChangedNotification};
+use vecno_notify::{
     collector::{Collector, CollectorNotificationReceiver},
     error::Result,
     events::EventType,
     notification::Notification as NotificationTrait,
     notifier::DynNotify,
 };
-use kaspa_utils::triggers::SingleTrigger;
-use kaspa_utxoindex::api::UtxoIndexProxy;
+use vecno_utils::triggers::SingleTrigger;
+use vecno_utxoindex::api::UtxoIndexProxy;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,

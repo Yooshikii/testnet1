@@ -3,14 +3,14 @@ use crate::prelude::*;
 use crate::pskt::{Inner as PSKTInner, PSKT};
 // use crate::wasm::result;
 
-use kaspa_addresses::{Address, Prefix};
-// use kaspa_bip32::Prefix;
-use kaspa_consensus_core::network::{NetworkId, NetworkType};
-use kaspa_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
+use vecno_addresses::{Address, Prefix};
+// use vecno_bip32::Prefix;
+use vecno_consensus_core::network::{NetworkId, NetworkType};
+use vecno_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
 
 use hex;
-use kaspa_consensus_core::constants::UNACCEPTED_DAA_SCORE;
-use kaspa_txscript::{extract_script_pub_key_address, pay_to_address_script, pay_to_script_hash_script};
+use vecno_consensus_core::constants::UNACCEPTED_DAA_SCORE;
+use vecno_txscript::{extract_script_pub_key_address, pay_to_address_script, pay_to_script_hash_script};
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 
@@ -75,7 +75,7 @@ impl Bundle {
         }
     }
 
-    pub fn display_format<F>(&self, network_id: NetworkId, sompi_formatter: F) -> String
+    pub fn display_format<F>(&self, network_id: NetworkId, veni_formatter: F) -> String
     where
         F: Fn(u64, &NetworkType) -> String,
     {
@@ -90,7 +90,7 @@ impl Bundle {
                 result.push_str(&format!("Input #{:02}\r\n", key_inner + 1));
 
                 if let Some(utxo_entry) = &input.utxo_entry {
-                    result.push_str(&format!("  amount: {}\r\n", sompi_formatter(utxo_entry.amount, &NetworkType::from(network_id))));
+                    result.push_str(&format!("  amount: {}\r\n", veni_formatter(utxo_entry.amount, &NetworkType::from(network_id))));
                     result.push_str(&format!(
                         "  address: {}\r\n",
                         extract_script_pub_key_address(&utxo_entry.script_public_key, Prefix::from(network_id))
@@ -103,7 +103,7 @@ impl Bundle {
 
             for (key_inner, output) in pskt.clone().outputs.iter().enumerate() {
                 result.push_str(&format!("Output #{:02}\r\n", key_inner + 1));
-                result.push_str(&format!("  amount: {}\r\n", sompi_formatter(output.amount, &NetworkType::from(network_id))));
+                result.push_str(&format!("  amount: {}\r\n", veni_formatter(output.amount, &NetworkType::from(network_id))));
                 result.push_str(&format!(
                     "  address: {}\r\n",
                     extract_script_pub_key_address(&output.script_public_key, Prefix::from(network_id)).expect("Input address")
@@ -169,7 +169,7 @@ pub fn lock_script_sig_templating_bytes(payload: Vec<u8>, pubkey_bytes: Option<&
     Ok(payload_bytes)
 }
 
-pub fn script_sig_to_address(script_sig: &[u8], prefix: kaspa_addresses::Prefix) -> Result<Address, Error> {
+pub fn script_sig_to_address(script_sig: &[u8], prefix: vecno_addresses::Prefix) -> Result<Address, Error> {
     extract_script_pub_key_address(&pay_to_script_hash_script(script_sig), prefix).map_err(Error::P2SHExtractError)
 }
 
@@ -177,14 +177,14 @@ pub fn unlock_utxos_as_pskb(
     utxo_references: Vec<(UtxoEntry, TransactionOutpoint)>,
     recipient: &Address,
     script_sig: Vec<u8>,
-    priority_fee_sompi_per_transaction: u64,
+    priority_fee_veni_per_transaction: u64,
 ) -> Result<Bundle, Error> {
     // Fee per transaction.
     // Check if each UTXO's amounts can cover priority fee.
     utxo_references
         .iter()
         .map(|(entry, _)| {
-            if entry.amount <= priority_fee_sompi_per_transaction {
+            if entry.amount <= priority_fee_veni_per_transaction {
                 return Err(Error::ExcessUnlockFeeError);
             }
             Ok(())
@@ -195,7 +195,7 @@ pub fn unlock_utxos_as_pskb(
     let (successes, errors): (Vec<_>, Vec<_>) = utxo_references
         .into_iter()
         .map(|(utxo_entry, outpoint)| {
-            unlock_utxo(&utxo_entry, &outpoint, &recipient_spk, &script_sig, priority_fee_sompi_per_transaction)
+            unlock_utxo(&utxo_entry, &outpoint, &recipient_spk, &script_sig, priority_fee_veni_per_transaction)
         })
         .partition(Result::is_ok);
 
@@ -225,7 +225,7 @@ pub fn unlock_utxo(
     outpoint: &TransactionOutpoint,
     script_public_key: &ScriptPublicKey,
     script_sig: &[u8],
-    priority_fee_sompi: u64,
+    priority_fee_veni: u64,
 ) -> Result<Bundle, Error> {
     let input = InputBuilder::default()
         .utxo_entry(utxo_entry.to_owned())
@@ -235,7 +235,7 @@ pub fn unlock_utxo(
         .build()?;
 
     let output = OutputBuilder::default()
-        .amount(utxo_entry.amount - priority_fee_sompi)
+        .amount(utxo_entry.amount - priority_fee_veni)
         .script_public_key(script_public_key.clone())
         .build()?;
 
@@ -276,8 +276,8 @@ mod tests {
     use crate::prelude::*;
     use crate::role::Creator;
     use crate::role::*;
-    use kaspa_consensus_core::tx::{TransactionId, TransactionOutpoint, UtxoEntry};
-    use kaspa_txscript::{multisig_redeem_script, pay_to_script_hash_script};
+    use vecno_consensus_core::tx::{TransactionId, TransactionOutpoint, UtxoEntry};
+    use vecno_txscript::{multisig_redeem_script, pay_to_script_hash_script};
     use secp256k1::Secp256k1;
     use secp256k1::{rand::thread_rng, Keypair};
     use std::str::FromStr;

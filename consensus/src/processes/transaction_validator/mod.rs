@@ -4,12 +4,12 @@ pub mod tx_validation_in_isolation;
 pub mod tx_validation_in_utxo_context;
 use std::sync::Arc;
 
-use kaspa_txscript::{
+use vecno_txscript::{
     caches::{Cache, TxScriptCacheCounters},
     SigCacheKey,
 };
 
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     config::params::{ForkActivation, ForkedParam},
     mass::MassCalculator,
 };

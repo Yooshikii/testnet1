@@ -7,9 +7,9 @@
 
 use crate::imports::*;
 use crate::tx::{Fees, GeneratorSummary, PaymentDestination};
-use kaspa_addresses::Address;
-use kaspa_consensus_client::{TransactionOutpoint, UtxoEntry};
-use kaspa_rpc_core::RpcFeerateBucket;
+use vecno_addresses::Address;
+use vecno_consensus_client::{TransactionOutpoint, UtxoEntry};
+use vecno_rpc_core::RpcFeerateBucket;
 
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[serde(rename_all = "camelCase")]
@@ -501,7 +501,7 @@ pub struct AccountsSendRequest {
     pub payment_secret: Option<Secret>,
     pub destination: PaymentDestination,
     pub fee_rate: Option<f64>,
-    pub priority_fee_sompi: Fees,
+    pub priority_fee_veni: Fees,
     pub payload: Option<Vec<u8>>,
 }
 
@@ -562,7 +562,7 @@ pub struct AccountsPskbSendResponse {
 pub struct AccountsGetUtxosRequest {
     pub account_id: AccountId,
     pub addresses: Option<Vec<Address>>,
-    pub min_amount_sompi: Option<u64>,
+    pub min_amount_veni: Option<u64>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
@@ -654,10 +654,10 @@ pub struct AccountsTransferRequest {
     pub destination_account_id: AccountId,
     pub wallet_secret: Secret,
     pub payment_secret: Option<Secret>,
-    pub transfer_amount_sompi: u64,
+    pub transfer_amount_veni: u64,
     pub fee_rate: Option<f64>,
-    pub priority_fee_sompi: Option<Fees>,
-    // pub priority_fee_sompi: Fees,
+    pub priority_fee_veni: Option<Fees>,
+    // pub priority_fee_veni: Fees,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
@@ -675,7 +675,7 @@ pub struct AccountsEstimateRequest {
     pub account_id: AccountId,
     pub destination: PaymentDestination,
     pub fee_rate: Option<f64>,
-    pub priority_fee_sompi: Fees,
+    pub priority_fee_veni: Fees,
     pub payload: Option<Vec<u8>>,
 }
 
@@ -815,7 +815,7 @@ pub struct AccountsCommitRevealManualRequest {
     pub wallet_secret: Secret,
     pub payment_secret: Option<Secret>,
     pub fee_rate: Option<f64>,
-    pub reveal_fee_sompi: u64,
+    pub reveal_fee_veni: u64,
     pub payload: Option<Vec<u8>>,
 }
 
@@ -858,10 +858,10 @@ pub struct AccountsCommitRevealRequest {
     pub address_index: u32,
     pub script_sig: Vec<u8>,
     pub wallet_secret: Secret,
-    pub commit_amount_sompi: u64,
+    pub commit_amount_veni: u64,
     pub payment_secret: Option<Secret>,
     pub fee_rate: Option<f64>,
-    pub reveal_fee_sompi: u64,
+    pub reveal_fee_veni: u64,
     pub payload: Option<Vec<u8>>,
 }
 

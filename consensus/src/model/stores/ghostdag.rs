@@ -1,12 +1,12 @@
 use crate::processes::ghostdag::ordering::SortableBlock;
-use kaspa_consensus_core::trusted::ExternalGhostdagData;
-use kaspa_consensus_core::{blockhash::{self, BlockHashes}, BlueWorkType};
-use kaspa_consensus_core::{BlockHashMap, BlockHasher, BlockLevel, HashMapCustomHasher};
-use kaspa_database::prelude::DB;
-use kaspa_database::prelude::{BatchDbWriter, CachedDbAccess, DbKey};
-use kaspa_database::prelude::{CachePolicy, StoreError};
-use kaspa_database::registry::{DatabaseStorePrefixes, SEPARATOR};
-use kaspa_hashes::Hash;
+use vecno_consensus_core::trusted::ExternalGhostdagData;
+use vecno_consensus_core::{blockhash::{self, BlockHashes}, BlueWorkType};
+use vecno_consensus_core::{BlockHashMap, BlockHasher, BlockLevel, HashMapCustomHasher};
+use vecno_database::prelude::DB;
+use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DbKey};
+use vecno_database::prelude::{CachePolicy, StoreError};
+use vecno_database::registry::{DatabaseStorePrefixes, SEPARATOR};
+use vecno_hashes::Hash;
 
 use itertools::EitherOrBoth::{Both, Left, Right};
 use itertools::Itertools;
@@ -15,10 +15,10 @@ use serde::{Deserialize, Serialize};
 use std::iter::once;
 use std::mem::size_of;
 use std::{cell::RefCell, sync::Arc};
-use kaspa_utils::mem_size::MemSizeEstimator;
+use vecno_utils::mem_size::MemSizeEstimator;
 
 /// Re-export for convenience
-pub use kaspa_consensus_core::{HashKTypeMap, KType};
+pub use vecno_consensus_core::{HashKTypeMap, KType};
 
 #[derive(Clone, Serialize, Deserialize, Default)]
 pub struct GhostdagData {
@@ -544,7 +544,7 @@ impl GhostdagStoreReader for MemoryGhostdagStore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kaspa_consensus_core::BlockHashSet;
+    use vecno_consensus_core::BlockHashSet;
 
     #[test]
     fn test_mergeset_iterators() {

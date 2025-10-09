@@ -1,20 +1,20 @@
 use indexmap::IndexSet;
 use itertools::Itertools;
-use kaspa_consensus::consensus::Consensus;
-use kaspa_consensus::model::stores::virtual_state::VirtualStateStoreReader;
-use kaspa_consensus::params::Params;
-use kaspa_consensus_core::api::ConsensusApi;
-use kaspa_consensus_core::block::{Block, TemplateBuildMode, TemplateTransactionSelector};
-use kaspa_consensus_core::coinbase::MinerData;
-use kaspa_consensus_core::mass::MassCalculator;
-use kaspa_consensus_core::sign::sign;
-use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-use kaspa_consensus_core::tx::{
+use vecno_consensus::consensus::Consensus;
+use vecno_consensus::model::stores::virtual_state::VirtualStateStoreReader;
+use vecno_consensus::params::Params;
+use vecno_consensus_core::api::ConsensusApi;
+use vecno_consensus_core::block::{Block, TemplateBuildMode, TemplateTransactionSelector};
+use vecno_consensus_core::coinbase::MinerData;
+use vecno_consensus_core::mass::MassCalculator;
+use vecno_consensus_core::sign::sign;
+use vecno_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+use vecno_consensus_core::tx::{
     MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
-use kaspa_consensus_core::utxo::utxo_view::UtxoView;
-use kaspa_core::trace;
-use kaspa_utils::sim::{Environment, Process, Resumption, Suspension};
+use vecno_consensus_core::utxo::utxo_view::UtxoView;
+use vecno_core::trace;
+use vecno_utils::sim::{Environment, Process, Resumption, Suspension};
 use rand::rngs::ThreadRng;
 use rand::Rng;
 use rand_distr::{Distribution, Exp};
@@ -38,7 +38,7 @@ impl TemplateTransactionSelector for OnetimeTxSelector {
         self.txs.take().unwrap()
     }
 
-    fn reject_selection(&mut self, _tx_id: kaspa_consensus_core::tx::TransactionId) {
+    fn reject_selection(&mut self, _tx_id: vecno_consensus_core::tx::TransactionId) {
         unimplemented!()
     }
 

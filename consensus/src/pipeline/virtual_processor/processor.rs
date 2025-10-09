@@ -48,7 +48,7 @@ use crate::{
         window::WindowManager,
     },
 };
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     acceptance_data::AcceptanceData,
     api::args::{TransactionValidationArgs, TransactionValidationBatchArgs},
     block::{BlockTemplate, MutableBlock, TemplateBuildMode, TemplateTransactionSelector},
@@ -69,19 +69,19 @@ use kaspa_consensus_core::{
     },
     BlockHashSet, ChainPath,
 };
-use kaspa_consensus_notify::{
+use vecno_consensus_notify::{
     notification::{
         NewBlockTemplateNotification, Notification, SinkBlueScoreChangedNotification, UtxosChangedNotification,
         VirtualChainChangedNotification, VirtualDaaScoreChangedNotification,
     },
     root::ConsensusNotificationRoot,
 };
-use kaspa_consensusmanager::SessionLock;
-use kaspa_core::{debug, info, time::unix_now, trace, warn};
-use kaspa_database::prelude::{StoreError, StoreResultEmptyTuple, StoreResultExtensions};
-use kaspa_hashes::{Hash, ZERO_HASH};
-use kaspa_muhash::MuHash;
-use kaspa_notify::{events::EventType, notifier::Notify};
+use vecno_consensusmanager::SessionLock;
+use vecno_core::{debug, info, time::unix_now, trace, warn};
+use vecno_database::prelude::{StoreError, StoreResultEmptyTuple, StoreResultExtensions};
+use vecno_hashes::{Hash, ZERO_HASH};
+use vecno_muhash::MuHash;
+use vecno_notify::{events::EventType, notifier::Notify};
 use once_cell::unsync::Lazy;
 
 use super::{
@@ -90,8 +90,8 @@ use super::{
 };
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use itertools::Itertools;
-use kaspa_consensus_core::tx::ValidatedTransaction;
-use kaspa_utils::binary_heap::BinaryHeapExtensions;
+use vecno_consensus_core::tx::ValidatedTransaction;
+use vecno_utils::binary_heap::BinaryHeapExtensions;
 use parking_lot::{RwLock, RwLockUpgradableReadGuard};
 use rand::{seq::SliceRandom, Rng};
 use rayon::{

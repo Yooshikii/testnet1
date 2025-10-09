@@ -6,7 +6,7 @@ pub struct Transfer;
 
 impl Transfer {
     async fn main(self: Arc<Self>, ctx: &Arc<dyn Context>, argv: Vec<String>, _cmd: &str) -> Result<()> {
-        let ctx = ctx.clone().downcast_arc::<KaspaCli>()?;
+        let ctx = ctx.clone().downcast_arc::<VecnoCli>()?;
 
         let account = ctx.wallet().account()?;
 
@@ -20,22 +20,22 @@ impl Transfer {
         if target_account.id() == account.id() {
             return Err("Cannot transfer to the same account".into());
         }
-        let amount_sompi = try_parse_required_nonzero_kaspa_as_sompi_u64(argv.get(1))?;
+        let amount_veni = try_parse_required_nonzero_vecno_as_veni_u64(argv.get(1))?;
         // TODO fee_rate
         let fee_rate = None;
-        let priority_fee_sompi = try_parse_optional_kaspa_as_sompi_i64(argv.get(2))?.unwrap_or(0);
+        let priority_fee_veni = try_parse_optional_vecno_as_veni_i64(argv.get(2))?.unwrap_or(0);
         let target_address = target_account.receive_address()?;
         let (wallet_secret, payment_secret) = ctx.ask_wallet_secret(Some(&account)).await?;
 
         let abortable = Abortable::default();
-        let outputs = PaymentOutputs::from((target_address.clone(), amount_sompi));
+        let outputs = PaymentOutputs::from((target_address.clone(), amount_veni));
 
         // let ctx_ = ctx.clone();
         let (summary, _ids) = account
             .send(
                 outputs.into(),
                 fee_rate,
-                priority_fee_sompi.into(),
+                priority_fee_veni.into(),
                 None,
                 wallet_secret,
                 payment_secret,

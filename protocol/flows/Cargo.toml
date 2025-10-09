@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-flows"
-description = "Kaspa p2p flows"
+name = "vecno-p2p-flows"
+description = "Vecno p2p flows"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,20 +10,20 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-p2p-mining.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-hashes.workspace = true
-kaspa-muhash.workspace = true
-kaspa-connectionmanager.workspace = true
-kaspa-addressmanager.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
+vecno-core.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-p2p-lib.workspace = true
+vecno-p2p-mining.workspace = true
+vecno-utils.workspace = true
+vecno-utils-tower.workspace = true
+vecno-hashes.workspace = true
+vecno-muhash.workspace = true
+vecno-connectionmanager.workspace = true
+vecno-addressmanager.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-mining.workspace = true
+vecno-notify.workspace = true
 
 async-trait.workspace = true
 futures = { workspace = true, features = ["alloc"] }

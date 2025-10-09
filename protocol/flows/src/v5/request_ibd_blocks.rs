@@ -1,7 +1,7 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
-use kaspa_core::debug;
-use kaspa_p2p_lib::{
-    common::ProtocolError, dequeue_with_request_id, make_response, pb::kaspad_message::Payload, IncomingRoute, Router,
+use vecno_core::debug;
+use vecno_p2p_lib::{
+    common::ProtocolError, dequeue_with_request_id, make_response, pb::vecnod_message::Payload, IncomingRoute, Router,
 };
 use std::sync::Arc;
 

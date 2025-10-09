@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-rpc-core"
-description = "Kaspa RPC core"
+name = "vecno-rpc-core"
+description = "Vecno RPC core"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -11,25 +11,25 @@ repository.workspace = true
 
 [features]
 wasm32-sdk = [
-    "kaspa-consensus-client/wasm32-sdk",
-    "kaspa-consensus-wasm/wasm32-sdk"
+    "vecno-consensus-client/wasm32-sdk",
+    "vecno-consensus-wasm/wasm32-sdk"
 ]
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-math.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-notify.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-rpc-macros.workspace = true
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-client.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensus-wasm.workspace = true
+vecno-core.workspace = true
+vecno-hashes.workspace = true
+vecno-index-core.workspace = true
+vecno-math.workspace = true
+vecno-mining-errors.workspace = true
+vecno-notify.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-rpc-macros.workspace = true
 
 async-channel.workspace = true
 async-trait.workspace = true

@@ -1,5 +1,5 @@
 //!
-//! WASM bindings for the [Rusty Kaspa p2p Node wRPC Client](kaspa-wrpc-client)
+//! WASM bindings for the [Rusty Vecno p2p Node wRPC Client](vecno-wrpc-client)
 //!
 
 #![allow(unused_imports)]

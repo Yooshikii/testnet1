@@ -1,6 +1,6 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use kaspa_consensus_core::{header::Header, BlueWorkType};
-use kaspa_hashes::Hash;
+use vecno_consensus_core::{header::Header, BlueWorkType};
+use vecno_hashes::Hash;
 use serde::{Deserialize, Serialize};
 use workflow_serializer::prelude::*;
 

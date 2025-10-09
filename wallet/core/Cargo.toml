@@ -1,7 +1,7 @@
 [package]
-name = "kaspa-wallet-core"
-description = "Kaspa wallet library"
-keywords = ["kaspa", "wallet"]
+name = "vecno-wallet-core"
+description = "Vecno wallet library"
+keywords = ["vecno", "wallet"]
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -13,14 +13,14 @@ repository.workspace = true
 [features]
 multi-user = []
 wasm32-keygen = [
-    # "kaspa-consensus-wasm/wasm32-types",
+    # "vecno-consensus-wasm/wasm32-types",
 ]
 wasm32-core = [
-    "kaspa-consensus-wasm/wasm32-sdk",
-    "kaspa-consensus-core/wasm32-sdk",
-    "kaspa-wrpc-client/wasm32-sdk",
-    "kaspa-wrpc-wasm/wasm32-sdk",
-    "kaspa-wasm-core/wasm32-sdk",
+    "vecno-consensus-wasm/wasm32-sdk",
+    "vecno-consensus-core/wasm32-sdk",
+    "vecno-wrpc-client/wasm32-sdk",
+    "vecno-wrpc-wasm/wasm32-sdk",
+    "vecno-wasm-core/wasm32-sdk",
 ]
 wasm32-sdk = [
     "wasm32-core"
@@ -56,25 +56,25 @@ heapless.workspace = true
 hmac.workspace = true
 itertools.workspace = true
 js-sys.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-client.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-metrics-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-wallet-keys.workspace = true
-kaspa-wallet-macros.workspace = true
-kaspa-wallet-pskt.workspace = true
-kaspa-wasm-core.workspace = true
-kaspa-wrpc-client.workspace = true
-kaspa-wrpc-wasm.workspace = true
+vecno-addresses.workspace = true
+vecno-bip32.workspace = true
+vecno-consensus-client.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-wasm.workspace = true
+vecno-core.workspace = true
+vecno-hashes.workspace = true
+vecno-metrics-core.workspace = true
+vecno-notify.workspace = true
+vecno-rpc-core.workspace = true
+vecno-txscript-errors.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-wallet-keys.workspace = true
+vecno-wallet-macros.workspace = true
+vecno-wallet-pskt.workspace = true
+vecno-wasm-core.workspace = true
+vecno-wrpc-client.workspace = true
+vecno-wrpc-wasm.workspace = true
 md-5.workspace = true
 pad.workspace = true
 pbkdf2.workspace = true

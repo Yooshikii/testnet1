@@ -2,17 +2,17 @@ use std::ops::Deref;
 use std::sync::Arc;
 
 use arc_swap::ArcSwap;
-use kaspa_consensus_core::api::stats::VirtualStateStats;
-use kaspa_consensus_core::{
+use vecno_consensus_core::api::stats::VirtualStateStats;
+use vecno_consensus_core::{
     block::VirtualStateApproxId, coinbase::BlockRewardData, config::genesis::GenesisBlock, tx::TransactionId,
     utxo::utxo_diff::UtxoDiff, BlockHashMap, BlockHashSet, HashMapCustomHasher,
 };
-use kaspa_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter, StoreResultExtensions};
-use kaspa_database::prelude::{CachePolicy, StoreResult};
-use kaspa_database::prelude::{StoreError, DB};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
-use kaspa_muhash::MuHash;
+use vecno_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter, StoreResultExtensions};
+use vecno_database::prelude::{CachePolicy, StoreResult};
+use vecno_database::prelude::{StoreError, DB};
+use vecno_database::registry::DatabaseStorePrefixes;
+use vecno_hashes::Hash;
+use vecno_muhash::MuHash;
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
 

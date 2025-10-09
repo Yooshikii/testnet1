@@ -5,7 +5,7 @@ use std::{
 };
 
 use itertools::Itertools;
-use kaspa_consensus_core::{
+use vecno_consensus_core::{
     blockhash::{BlockHashes, ORIGIN},
     errors::pruning::{PruningImportError, PruningImportResult},
     header::Header,
@@ -13,10 +13,10 @@ use kaspa_consensus_core::{
     trusted::TrustedBlock,
     BlockHashMap, BlockHashSet, BlockLevel, HashMapCustomHasher,
 };
-use kaspa_core::{debug, trace};
-use kaspa_hashes::Hash;
-use kaspa_pow::calc_block_level;
-use kaspa_utils::{binary_heap::BinaryHeapExtensions, vec::VecExtensions};
+use vecno_core::{debug, trace};
+use vecno_hashes::Hash;
+use vecno_pow::calc_block_level;
+use vecno_utils::{binary_heap::BinaryHeapExtensions, vec::VecExtensions};
 use rocksdb::WriteBatch;
 
 use crate::{

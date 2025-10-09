@@ -1,16 +1,16 @@
 use std::sync::Arc;
 
-use kaspa_consensus_core::BlockHashSet;
-use kaspa_consensus_core::BlockHasher;
-use kaspa_database::prelude::CachedDbSetItem;
-use kaspa_database::prelude::DbWriter;
-use kaspa_database::prelude::ReadLock;
-use kaspa_database::prelude::StoreResult;
-use kaspa_database::prelude::StoreResultExtensions;
-use kaspa_database::prelude::DB;
-use kaspa_database::prelude::{BatchDbWriter, DirectDbWriter};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
+use vecno_consensus_core::BlockHashSet;
+use vecno_consensus_core::BlockHasher;
+use vecno_database::prelude::CachedDbSetItem;
+use vecno_database::prelude::DbWriter;
+use vecno_database::prelude::ReadLock;
+use vecno_database::prelude::StoreResult;
+use vecno_database::prelude::StoreResultExtensions;
+use vecno_database::prelude::DB;
+use vecno_database::prelude::{BatchDbWriter, DirectDbWriter};
+use vecno_database::registry::DatabaseStorePrefixes;
+use vecno_hashes::Hash;
 use rocksdb::WriteBatch;
 
 /// Reader API for `TipsStore`.
@@ -99,7 +99,7 @@ impl TipsStore for DbTipsStore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kaspa_database::{create_temp_db, prelude::ConnBuilder};
+    use vecno_database::{create_temp_db, prelude::ConnBuilder};
 
     #[test]
     fn test_update_tips() {

@@ -19,13 +19,13 @@ use tokio::{
     },
     time::{interval, MissedTickBehavior},
 };
-use kaspa_addressmanager::{AddressManager, NetAddress};
-use kaspa_core::{debug, info, warn};
-use kaspa_p2p_lib::{common::ProtocolError, ConnectionError, Peer};
-use kaspa_utils::triggers::SingleTrigger;
+use vecno_addressmanager::{AddressManager, NetAddress};
+use vecno_core::{debug, info, warn};
+use vecno_p2p_lib::{common::ProtocolError, ConnectionError, Peer};
+use vecno_utils::triggers::SingleTrigger;
 
 pub struct ConnectionManager {
-    p2p_adaptor: Arc<kaspa_p2p_lib::Adaptor>,
+    p2p_adaptor: Arc<vecno_p2p_lib::Adaptor>,
     outbound_target: usize,
     inbound_limit: usize,
     peers: &'static [&'static str],
@@ -51,7 +51,7 @@ impl ConnectionRequest {
 
 impl ConnectionManager {
     pub fn new(
-        p2p_adaptor: Arc<kaspa_p2p_lib::Adaptor>,
+        p2p_adaptor: Arc<vecno_p2p_lib::Adaptor>,
         outbound_target: usize,
         inbound_limit: usize,
         peers: &'static [&'static str],
@@ -164,7 +164,7 @@ impl ConnectionManager {
     }
 
     async fn handle_outbound_connections(self: &Arc<Self>, peer_by_address: &HashMap<SocketAddr, Peer>) {
-        let active_outbound: HashSet<kaspa_addressmanager::NetAddress> =
+        let active_outbound: HashSet<vecno_addressmanager::NetAddress> =
             peer_by_address.values().filter(|peer| peer.is_outbound()).map(|peer| peer.net_address().into()).collect();
         if active_outbound.len() >= self.outbound_target {
             return;

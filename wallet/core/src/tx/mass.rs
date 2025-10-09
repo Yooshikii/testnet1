@@ -4,19 +4,19 @@
 
 use crate::error::Error;
 use crate::result::Result;
-use kaspa_consensus_client as kcc;
-use kaspa_consensus_client::UtxoEntryReference;
-use kaspa_consensus_core::mass::calc_storage_mass as consensus_calc_storage_mass;
-use kaspa_consensus_core::tx::{Transaction, TransactionInput, TransactionOutput, SCRIPT_VECTOR_SIZE};
-use kaspa_consensus_core::{config::params::Params, constants::*, subnets::SUBNETWORK_ID_SIZE};
-use kaspa_hashes::HASH_SIZE;
+use vecno_consensus_client as kcc;
+use vecno_consensus_client::UtxoEntryReference;
+use vecno_consensus_core::mass::calc_storage_mass as consensus_calc_storage_mass;
+use vecno_consensus_core::tx::{Transaction, TransactionInput, TransactionOutput, SCRIPT_VECTOR_SIZE};
+use vecno_consensus_core::{config::params::Params, constants::*, subnets::SUBNETWORK_ID_SIZE};
+use vecno_hashes::HASH_SIZE;
 
 // pub const ECDSA_SIGNATURE_SIZE: u64 = 64;
 // pub const SCHNORR_SIGNATURE_SIZE: u64 = 64;
 pub const SIGNATURE_SIZE: u64 = 1 + 64 + 1; //1 byte for OP_DATA_65 + 64 (length of signature) + 1 byte for sig hash type
 
 /// MINIMUM_RELAY_TRANSACTION_FEE specifies the minimum transaction fee for a transaction to be accepted to
-/// the mempool and relayed. It is specified in sompi per 1kg (or 1000 grams) of transaction mass.
+/// the mempool and relayed. It is specified in veni per 1kg (or 1000 grams) of transaction mass.
 pub(crate) const MINIMUM_RELAY_TRANSACTION_FEE: u64 = 1000;
 
 /// MAXIMUM_STANDARD_TRANSACTION_MASS is the maximum mass allowed for transactions that
@@ -28,8 +28,8 @@ pub const MAXIMUM_STANDARD_TRANSACTION_MASS: u64 = 100_000;
 pub fn calc_minimum_required_transaction_relay_fee(mass: u64) -> u64 {
     // Calculate the minimum fee for a transaction to be allowed into the
     // mempool and relayed by scaling the base fee. MinimumRelayTransactionFee is in
-    // sompi/kg so multiply by mass (which is in grams) and divide by 1000 to get
-    // minimum sompis.
+    // veni/kg so multiply by mass (which is in grams) and divide by 1000 to get
+    // minimum veni.
     let mut minimum_fee = (mass * MINIMUM_RELAY_TRANSACTION_FEE) / 1000;
 
     if minimum_fee == 0 {
@@ -38,7 +38,7 @@ pub fn calc_minimum_required_transaction_relay_fee(mass: u64) -> u64 {
 
     // Set the minimum fee to the maximum possible value if the calculated
     // fee is not in the valid range for monetary amounts.
-    minimum_fee = minimum_fee.min(MAX_SOMPI);
+    minimum_fee = minimum_fee.min(MAX_VENI);
 
     minimum_fee
 }
@@ -86,12 +86,12 @@ pub fn is_transaction_output_dust(transaction_output: &TransactionOutput) -> boo
 
     // The output is considered dust if the cost to the network to spend the
     // coins is more than 1/3 of the minimum free transaction relay fee.
-    // mp.config.MinimumRelayTransactionFee is in sompi/KB, so multiply
+    // mp.config.MinimumRelayTransactionFee is in veni/KB, so multiply
     // by 1000 to convert to bytes.
     //
     // Using the typical values for a pay-to-pubkey transaction from
     // the breakdown above and the default minimum free transaction relay
-    // fee of 1000, this equates to values less than 546 sompi being
+    // fee of 1000, this equates to values less than 546 veni being
     // considered dust.
     //
     // The following is equivalent to (value/total_serialized_size) * (1/3) * 1000
@@ -121,8 +121,8 @@ pub const STANDARD_OUTPUT_SIZE_PLUS_INPUT_SIZE_3X: u64 = STANDARD_OUTPUT_SIZE_PL
 
 // pub fn is_standard_output_amount_dust(network_params: &NetworkParams, value: u64) -> bool {
 // pub fn is_dust(_network_params: &NetworkParams, value: u64) -> bool {
-//     // if let Some(dust_threshold_sompi) = network_params.dust_threshold_sompi {
-//     //     return value < dust_threshold_sompi;
+//     // if let Some(dust_threshold_veni) = network_params.dust_threshold_veni {
+//     //     return value < dust_threshold_veni;
 //     // } else {
 //     match value.checked_mul(1000) {
 //         Some(value_1000) => value_1000 / STANDARD_OUTPUT_SIZE_PLUS_INPUT_SIZE_3X < MINIMUM_RELAY_TRANSACTION_FEE,

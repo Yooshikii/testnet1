@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-rpc-service"
-description = "Kaspa RPC service"
+name = "vecno-rpc-service"
+description = "Vecno RPC service"
 rust-version.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -10,25 +10,25 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-math.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
-kaspa-p2p-flows.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-p2p-mining.workspace = true
-kaspa-perf-monitor.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-utxoindex.workspace = true
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-hashes.workspace = true
+vecno-index-core.workspace = true
+vecno-math.workspace = true
+vecno-mining.workspace = true
+vecno-notify.workspace = true
+vecno-p2p-flows.workspace = true
+vecno-p2p-lib.workspace = true
+vecno-p2p-mining.workspace = true
+vecno-perf-monitor.workspace = true
+vecno-rpc-core.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-utils-tower.workspace = true
+vecno-utxoindex.workspace = true
 
 async-trait.workspace = true
 log.workspace = true

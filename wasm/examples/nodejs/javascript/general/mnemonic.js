@@ -1,9 +1,9 @@
-const kaspa = require('../../../../nodejs/kaspa');
+const vecno = require('../../../../nodejs/vecno');
 const {
     Mnemonic,
-} = kaspa;
+} = vecno;
 
-kaspa.initConsolePanicHook();
+vecno.initConsolePanicHook();
 
 (async () => {
 
