@@ -1,7 +1,7 @@
 //!
 //! # Vecno Utilities
 //!
-//! General purpose utilities and various type extensions used across the Rusty Vecno codebase.
+//! General purpose utilities and various type extensions used across the Vecno codebase.
 //!
 
 pub mod any;

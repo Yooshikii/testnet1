@@ -663,8 +663,7 @@ try_from!(&protowire::NotifyNewBlockTemplateResponseMessage, RpcResult<vecno_rpc
 try_from!(&protowire::GetCurrentNetworkRequestMessage, vecno_rpc_core::GetCurrentNetworkRequest);
 try_from!(item: &protowire::GetCurrentNetworkResponseMessage, RpcResult<vecno_rpc_core::GetCurrentNetworkResponse>, {
     // Note that current_network is first converted to lowercase because the golang implementation
-    // returns a "human readable" version with a capital first letter while the rusty version
-    // is fully lowercase.
+    // returns a "human readable" version with a capital first letter.
     Self { network: RpcNetworkType::from_str(&item.current_network.to_lowercase())? }
 });
 

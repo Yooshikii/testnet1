@@ -1,5 +1,5 @@
 //!
-//! The main [`RpcApi`] trait that defines all RPC methods available in the Rusty Vecno p2p node.
+//! The main [`RpcApi`] trait that defines all RPC methods available in the Vecno p2p node.
 //!
 //! Rpc = External RPC Service
 //! All data provided by the RPC server can be trusted by the client

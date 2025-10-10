@@ -1,4 +1,4 @@
-# PowerShell script to build the Rusty Vecno WASM32 SDK release on Windows.
+# PowerShell script to build the Vecno WASM32 SDK release on Windows.
 # Designed to run in Visual Studio Code's integrated terminal or as a VS Code task.
 
 # Stop on any error

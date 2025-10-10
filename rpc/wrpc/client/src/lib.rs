@@ -1,5 +1,5 @@
 //!
-//! # wRPC Client for Rusty Vecno p2p Node
+//! # wRPC Client for Vecno p2p Node
 //!
 //! This crate provides a WebSocket RPC client for Vecno p2p node. It is based on the
 //! [wRPC](https://docs.rs/workflow-rpc) crate that offers WebSocket RPC implementation

@@ -1,4 +1,3 @@
-
 ### Latest Release
 
 - Replace `MassCalculator` with `calculateTransactionMass` and `calculateTransactionFee` functions.
@@ -48,7 +47,7 @@
 
 ### Release 2024-04-14
 
-- Merge with Rusty Vecno master (0.13.6)
+- Merge with Vecno master (0.13.6)
 
 ### Release 2024-04-13
 

@@ -24,7 +24,7 @@ The default branch of this repository is `master` and new contributions are cons
   - 512 GB SSD
   - Higher network bandwidth for robust peer support
 
-While the minimum specs suffice to sync and maintain a 10 bps node, increasing CPU cores, RAM, storage, and bandwidth allows your node to serve as a stronger focal point on the network. This leads to faster initial block download (IBD) for peers syncing from your node and provides more leeway for future storage growth and optimization.
+While the minimum specs suffice to sync and maintain a 1 bps node, increasing CPU cores, RAM, storage, and bandwidth allows your node to serve as a stronger focal point on the network. This leads to faster initial block download (IBD) for peers syncing from your node and provides more leeway for future storage growth and optimization.
 
 If you are a pool operator, it is _strongly recommended_ that you pick specs that are closer to the preferred specifications above.
 
@@ -213,8 +213,8 @@ Vecno CLI + Wallet
 </summary>
 
 `vecno-cli` crate provides a cli-driven RPC interface to the node and a
-terminal interface to the Rusty Vecno Wallet runtime. These wallets are
-compatible with WASM SDK Wallet API and Vecno NG projects.
+terminal interface to the Vecno Wallet runtime. These wallets are
+compatible with WASM SDK Wallet API
 
 ```bash
 cd cli
@@ -333,7 +333,7 @@ wRPC
 
   **Sidenote:**
 
-  Rusty Vecno integrates an optional wRPC
+  Vecno integrates an optional wRPC
   subsystem. wRPC is a high-performance, platform-neutral, Rust-centric, WebSocket-framed RPC
   implementation that can use [Borsh](https://borsh.io/) and JSON protocol encoding.
 

@@ -120,7 +120,7 @@ enum RpcNotifyCommand {
 
 // GetCurrentNetworkRequestMessage requests the network vecnod is currently running against.
 //
-// Possible networks are: Mainnet, Testnet, Simnet, Devnet
+// Possible networks are: Mainnet, Testnet, Simnet
 message GetCurrentNetworkRequestMessage{
 }
 

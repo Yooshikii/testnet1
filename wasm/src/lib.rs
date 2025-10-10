@@ -1,5 +1,5 @@
 /*!
-# Rusty Vecno WASM32 bindings
+# Vecno WASM32 bindings
 
 Vecno WASM32 bindings offer direct integration of Rust code and Vecno
 codebase within JavaScript environments such as Node.js and Web Browsers.
