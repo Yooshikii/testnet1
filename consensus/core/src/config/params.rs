@@ -500,7 +500,7 @@ pub const MAINNET_PARAMS: Params = Params {
     pruning_proof_m: 1000,
 
     crescendo: CRESCENDO,
-    crescendo_activation: ForkActivation::always(),
+    crescendo_activation: ForkActivation::never(),
 };
 
 pub const TESTNET_PARAMS: Params = Params {
