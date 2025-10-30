@@ -49,9 +49,9 @@ vecno.initConsolePanicHook();
         throw new Error("pubkey4 dont match")
     }
 
-    // xprv with ktrv prefix
-    const ktrv = xPrv.intoString("ktrv");
-    console.log("ktrv", ktrv)
+    // xprv with vtrv prefix
+    const vtrv = xPrv.intoString("vtrv");
+    console.log("vtrv", vtrv)
 
     //create DerivationPath
     const path = new DerivationPath("m/1'");
@@ -63,8 +63,9 @@ vecno.initConsolePanicHook();
     console.log("xPrv1", xPrv.derivePath("m/1'/2'/3").intoString("xprv"))
     // derive by DerivationPath object
     console.log("xPrv3", xPrv.derivePath(path).intoString("xprv"))
-    // create XPrv from ktrvxxx string and derive it
-    console.log("xPrv2", XPrv.fromXPrv(ktrv).derivePath("m/1'/2'/3").intoString("xprv"))
+    // create XPrv from vtrvxxx string and derive it
+    console.log("xPrv2", XPrv.fromXPrv(vtrv).derivePath("m/1'/2'/3").intoString("xprv"))
+    
     
 
     // get xpub
