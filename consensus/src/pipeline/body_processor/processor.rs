@@ -89,7 +89,7 @@ pub struct BlockBodyProcessor {
     counters: Arc<ProcessingCounters>,
 
     /// Storage mass hardfork DAA score
-    pub(crate) crescendo_activation: ForkActivation,
+    pub(crate) starlight_activation: ForkActivation,
 }
 
 impl BlockBodyProcessor {
@@ -133,7 +133,7 @@ impl BlockBodyProcessor {
             task_manager: BlockTaskDependencyManager::new(),
             notification_root,
             counters,
-            crescendo_activation: params.crescendo_activation,
+            starlight_activation: params.starlight_activation,
         }
     }
 

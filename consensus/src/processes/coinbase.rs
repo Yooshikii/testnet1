@@ -33,14 +33,14 @@ pub struct CoinbaseManager {
     premine_phase_base_subsidy: u64,
     bps: ForkedParam<u64>,
 
-    /// Precomputed subsidy by month tables (for before and after the Crescendo hardfork)
+    /// Precomputed subsidy by month tables (for before and after the Starlight hardfork)
     subsidy_by_month_table_before: SubsidyByMonthTable,
     subsidy_by_month_table_after: SubsidyByMonthTable,
 
-    /// The crescendo activation DAA score where BPS increased from 1 to 10.
+    /// The starlight activation DAA score where BPS increased from 1 to 10.
     /// This score is required here long-term (and not only for the actual forking), in
     /// order to correctly determine the subsidy month from the live DAA score of the network   
-    crescendo_activation_daa_score: u64,
+    starlight_activation_daa_score: u64,
 }
 
 /// Struct used to streamline payload parsing
@@ -84,7 +84,7 @@ impl CoinbaseManager {
             bps,
             subsidy_by_month_table_before,
             subsidy_by_month_table_after,
-            crescendo_activation_daa_score: bps.activation().daa_score(),
+            starlight_activation_daa_score: bps.activation().daa_score(),
         }
     }
 
@@ -118,7 +118,7 @@ impl CoinbaseManager {
         // single output rewarding all to the current block (the "merging" block)
         let mut red_reward = 0u64;
 
-        // bps activation = crescendo activation
+        // bps activation = starlight activation
         if self.bps.activation().is_active(daa_score) {
             for red in ghostdag_data.mergeset_reds.iter() {
                 let reward_data = mergeset_rewards.get(red).unwrap();
@@ -245,17 +245,17 @@ impl CoinbaseManager {
     ///
     /// Note that this function is called only if daa_score >= self.premine_daa_score
     fn subsidy_month(&self, daa_score: u64) -> u64 {
-        let seconds_since_deflationary_phase_started = if self.crescendo_activation_daa_score < self.premine_daa_score {
-            // crescendo_activation < deflationary_phase <= daa_score (activated before deflation)
+        let seconds_since_deflationary_phase_started = if self.starlight_activation_daa_score < self.premine_daa_score {
+            // starlight_activation < deflationary_phase <= daa_score (activated before deflation)
             (daa_score - self.premine_daa_score) / self.bps.after()
-        } else if daa_score < self.crescendo_activation_daa_score {
-            // deflationary_phase <= daa_score < crescendo_activation (pre activation)
+        } else if daa_score < self.starlight_activation_daa_score {
+            // deflationary_phase <= daa_score < starlight_activation (pre activation)
             (daa_score - self.premine_daa_score) / self.bps.before()
         } else {
-            // Else - deflationary_phase <= crescendo_activation <= daa_score.
-            // Count seconds differently before and after Crescendo activation
-            (self.crescendo_activation_daa_score - self.premine_daa_score) / self.bps.before()
-                + (daa_score - self.crescendo_activation_daa_score) / self.bps.after()
+            // Else - deflationary_phase <= starlight_activation <= daa_score.
+            // Count seconds differently before and after Starlight activation
+            (self.starlight_activation_daa_score - self.premine_daa_score) / self.bps.before()
+                + (daa_score - self.starlight_activation_daa_score) / self.bps.after()
         };
 
         seconds_since_deflationary_phase_started / SECONDS_PER_MONTH
@@ -383,13 +383,13 @@ mod tests {
         // deflation and activation DAA scores (and the test is long anyway)
         for network_id in [NetworkId::new(NetworkType::Mainnet)] {
             let mut params: Params = network_id.into();
-            params.crescendo_activation = ForkActivation::never();
+            params.starlight_activation = ForkActivation::never();
             let cbm = create_manager(&params);
             let (baseline_epochs, baseline_total) = calculate_emission(cbm);
 
             let mut activations = vec![10000, 33444444, 120727479];
             for network_id in NetworkId::iter() {
-                let activation = Params::from(network_id).crescendo_activation;
+                let activation = Params::from(network_id).starlight_activation;
                 if activation != ForkActivation::never() && activation != ForkActivation::always() {
                     activations.push(activation.daa_score());
                 }
@@ -397,13 +397,13 @@ mod tests {
 
             // Loop over a few random activation points + specified activation points for all nets
             for activation in activations {
-                params.crescendo_activation = ForkActivation::new(activation);
+                params.starlight_activation = ForkActivation::new(activation);
                 let cbm = create_manager(&params);
                 let (new_epochs, new_total) = calculate_emission(cbm);
 
                 // Epochs only represents the number of times the subsidy changed (lower after activation due to rounding)
                 println!("BASELINE:\t{}\tepochs, total emission: {}", baseline_epochs, baseline_total);
-                println!("CRESCENDO:\t{}\tepochs, total emission: {}, activation: {}", new_epochs, new_total, activation);
+                println!("STARLIGHT:\t{}\tepochs, total emission: {}, activation: {}", new_epochs, new_total, activation);
 
                 let diff = (new_total as i64 - baseline_total as i64) / VENI_PER_VECNO as i64;
                 assert!(diff.abs() <= 51, "activation: {}", activation);
@@ -448,9 +448,9 @@ mod tests {
 
         for network_id in NetworkId::iter() {
             let mut params: Params = network_id.into();
-            if params.crescendo_activation != ForkActivation::always() {
+            if params.starlight_activation != ForkActivation::always() {
                 // We test activation scenarios in verify_crescendo_emission_schedule
-                params.crescendo_activation = ForkActivation::never();
+                params.starlight_activation = ForkActivation::never();
             }
             let cbm = create_manager(&params);
             let bps = params.bps().before();

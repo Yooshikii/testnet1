@@ -28,7 +28,7 @@ impl AppenderSpec {
         Self::new(
             name,
             level,
-            Box::new(ConsoleAppender::builder().encoder(Box::new(CrescendoEncoder::new(LOG_LINE_PATTERN_COLORED))).build()),
+            Box::new(ConsoleAppender::builder().encoder(Box::new(StarlightEncoder::new(LOG_LINE_PATTERN_COLORED))).build()),
         )
     }
 
@@ -67,35 +67,35 @@ impl AppenderSpec {
     }
 }
 
-pub const CRESCENDO_KEYWORD: &str = "crescendo";
-const CRESCENDO_LOG_LINE_PATTERN_COLORED: &str = "{d(%Y-%m-%d %H:%M:%S%.3f%:z)} [{h({(CRND):5.5})}] {m}{n}";
+pub const STARLIGHT_KEYWORD: &str = "starlight";
+const STARLIGHT_LOG_LINE_PATTERN_COLORED: &str = "{d(%Y-%m-%d %H:%M:%S%.3f%:z)} [{h({(CRND):5.5})}] {m}{n}";
 
 // TODO (post HF): remove or hide the custom encoder
 #[derive(Debug)]
-struct CrescendoEncoder {
+struct StarlightEncoder {
     general_encoder: PatternEncoder,
-    crescendo_encoder: PatternEncoder,
+    starlight_encoder: PatternEncoder,
     keyword: &'static str,
 }
 
-impl CrescendoEncoder {
+impl StarlightEncoder {
     fn new(pattern: &str) -> Self {
-        CrescendoEncoder {
+        StarlightEncoder {
             general_encoder: PatternEncoder::new(pattern),
-            crescendo_encoder: PatternEncoder::new(CRESCENDO_LOG_LINE_PATTERN_COLORED),
-            keyword: CRESCENDO_KEYWORD,
+            starlight_encoder: PatternEncoder::new(STARLIGHT_LOG_LINE_PATTERN_COLORED),
+            keyword: STARLIGHT_KEYWORD,
         }
     }
 }
 
-impl Encode for CrescendoEncoder {
+impl Encode for StarlightEncoder {
     fn encode(&self, w: &mut dyn Write, record: &log::Record) -> anyhow::Result<()> {
         if record.target() == self.keyword {
             // Hack: override log level to debug so that inner encoder does not reset the style
             // (note that we use the custom pattern with CRND so this change isn't visible)
             let record = record.to_builder().level(log::Level::Debug).build();
             w.set_style(Style::new().text(Color::Cyan))?;
-            self.crescendo_encoder.encode(w, &record)?;
+            self.starlight_encoder.encode(w, &record)?;
             w.set_style(&Style::new())?;
             Ok(())
         } else {

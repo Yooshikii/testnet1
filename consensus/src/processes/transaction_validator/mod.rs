@@ -26,8 +26,8 @@ pub struct TransactionValidator {
 
     pub(crate) mass_calculator: MassCalculator,
 
-    /// Crescendo hardfork activation score. Activates KIPs 9, 10, 14
-    crescendo_activation: ForkActivation,
+    /// Starlight hardfork activation score. Activates KIPs 9, 10, 14
+    starlight_activation: ForkActivation,
 }
 
 impl TransactionValidator {
@@ -40,7 +40,7 @@ impl TransactionValidator {
         coinbase_maturity: ForkedParam<u64>,
         counters: Arc<TxScriptCacheCounters>,
         mass_calculator: MassCalculator,
-        crescendo_activation: ForkActivation,
+        starlight_activation: ForkActivation,
     ) -> Self {
         Self {
             max_tx_inputs,
@@ -51,7 +51,7 @@ impl TransactionValidator {
             coinbase_maturity,
             sig_cache: Cache::with_counters(10_000, counters),
             mass_calculator,
-            crescendo_activation,
+            starlight_activation,
         }
     }
 
@@ -73,7 +73,7 @@ impl TransactionValidator {
             coinbase_maturity: ForkedParam::new_const(coinbase_maturity),
             sig_cache: Cache::with_counters(10_000, counters),
             mass_calculator: MassCalculator::new(0, 0, 0, 0),
-            crescendo_activation: ForkActivation::never(),
+            starlight_activation: ForkActivation::never(),
         }
     }
 }

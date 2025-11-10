@@ -18,7 +18,7 @@ use vecno_consensus_core::{
     config::params::ForkedParam,
     errors::pruning::{PruningImportError, PruningImportResult},
 };
-use vecno_core::{info, log::CRESCENDO_KEYWORD};
+use vecno_core::{info, log::STARLIGHT_KEYWORD};
 use vecno_database::prelude::StoreResultEmptyTuple;
 use vecno_hashes::Hash;
 use parking_lot::RwLock;
@@ -82,7 +82,7 @@ impl<
         header_selected_tip_store: Arc<RwLock<W>>,
         pruning_samples_store: Arc<Y>,
     ) -> Self {
-        // [Crescendo]: These conditions ensure that blue score points with the same finality score before
+        // [Starlight]: These conditions ensure that blue score points with the same finality score before
         // the fork will remain with the same finality score post the fork. See below for the usage.
         assert!(finality_depth.before() <= finality_depth.after());
         assert!(finality_depth.after() % finality_depth.before() == 0);
@@ -181,8 +181,8 @@ impl<
             && ghostdag_data.blue_score.saturating_sub(pruning_point_blue_score) < self.pruning_depth.after()
             && CoinFlip::new(1.0 / 1000.0).flip()
         {
-            info!(target: CRESCENDO_KEYWORD,
-                "[Crescendo] Pruning depth increasing post activation: {} (target: {})",
+            info!(target: STARLIGHT_KEYWORD,
+                "[Starlight] Pruning depth increasing post activation: {} (target: {})",
                 ghostdag_data.blue_score.saturating_sub(pruning_point_blue_score),
                 self.pruning_depth.after()
             );
@@ -216,7 +216,7 @@ impl<
             (v2, candidate)
         } else {
             let (v1, candidate) = self.next_pruning_points_v1(sink_ghostdag, current_candidate, current_pruning_point);
-            // [Crescendo]: sanity check that v2 logic pre activation is equivalent to v1
+            // [Starlight]: sanity check that v2 logic pre activation is equivalent to v1
             let v2 = self.next_pruning_points_v2(sink_ghostdag, selected_parent_daa_score, current_pruning_point);
             assert_eq!(v1, v2, "v1 = v2 pre activation");
             (v1, candidate)
@@ -306,7 +306,7 @@ impl<
         let mut new_candidate = current_candidate;
 
         /*
-            [Crescendo]
+            [Starlight]
 
             Notation:
                 P = pruning point
@@ -434,7 +434,7 @@ impl<
             sp_pp
         };
 
-        // [Crescendo]: shortly after fork activation, R is not guaranteed to comply with the new
+        // [Starlight]: shortly after fork activation, R is not guaranteed to comply with the new
         // increased pruning depth, so we must manually verify not to go below it
         if sp_pp_blue_score >= self.headers_store.get_blue_score(next_or_current_pp).unwrap() {
             return sp_pp;
@@ -447,7 +447,7 @@ impl<
         for i in (0..=current_pruning_point_index).rev() {
             let past_pp = self.past_pruning_points_store.get(i).unwrap();
 
-            // [Crescendo]: shortly after fork activation, R is not guaranteed to comply with the new
+            // [Starlight]: shortly after fork activation, R is not guaranteed to comply with the new
             // increased pruning depth, so we must manually verify not to go below it
             if sp_pp_blue_score >= self.headers_store.get_blue_score(past_pp).unwrap() {
                 return sp_pp;
@@ -475,7 +475,7 @@ impl<
         }
 
         let tip_bs = self.ghostdag_store.get_blue_score(tip).unwrap();
-        // [Crescendo]: for new nodes syncing right after the fork, it might be difficult to determine whether the
+        // [Starlight]: for new nodes syncing right after the fork, it might be difficult to determine whether the
         // new pruning depth is expected, so we use the DAA score of the pruning point itself as an indicator.
         // This means that in the first few days following the fork we err on the side of a shorter period which is
         // a weaker requirement
@@ -502,7 +502,7 @@ impl<
         let mut expected_pps_queue = VecDeque::new();
         for current in self.reachability_service.forward_chain_iterator(pruning_info.pruning_point, syncer_sink, true).skip(1) {
             let current_header = self.headers_store.get_header(current).unwrap();
-            // Post-crescendo: expected header pruning point is no longer part of header validity, but we want to make sure
+            // Post-starlight: expected header pruning point is no longer part of header validity, but we want to make sure
             // the syncer's virtual chain indeed coincides with the pruning point and past pruning points before downloading
             // the UTXO set and resolving virtual. Hence we perform the check over this chain here.
             let reply = self.expected_header_pruning_point_v2(self.ghostdag_store.get_compact_data(current).unwrap());

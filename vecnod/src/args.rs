@@ -186,7 +186,7 @@ impl Args {
     pub fn network(&self) -> NetworkId {
         match (self.testnet, self.devnet, self.simnet) {
             (false, false, false) => NetworkId::new(NetworkType::Mainnet),
-            (true, false, false) => NetworkId::with_suffix(NetworkType::Testnet, self.testnet_suffix),
+            (true, false, false) => NetworkId::new(NetworkType::Testnet),
             (false, false, true) => NetworkId::new(NetworkType::Simnet),
             _ => panic!("only a single net should be activated"),
         }

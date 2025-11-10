@@ -519,14 +519,14 @@ impl FlowContext {
         Ok(())
     }
 
-    /// [Crescendo] temp crescendo countdown logging
+    /// [Starlight] temp starlight countdown logging
     pub(super) fn log_new_block_event(&self, event: BlockLogEvent, daa_score: u64) {
-        if self.config.bps().before() == 1 && !self.config.crescendo_activation.is_active(daa_score) {
-            if let Some(dist) = self.config.crescendo_activation.is_within_range_before_activation(daa_score, 3600) {
+        if self.config.bps().before() == 1 && !self.config.starlight_activation.is_active(daa_score) {
+            if let Some(dist) = self.config.starlight_activation.is_within_range_before_activation(daa_score, 3600) {
                 match event {
-                    BlockLogEvent::Relay(hash) => info!("Accepted block {} via relay \t [Crescendo countdown: -{}]", hash, dist),
+                    BlockLogEvent::Relay(hash) => info!("Accepted block {} via relay \t [Starlight countdown: -{}]", hash, dist),
                     BlockLogEvent::Submit(hash) => {
-                        info!("Accepted block {} via submit block \t [Crescendo countdown: -{}]", hash, dist)
+                        info!("Accepted block {} via submit block \t [Starlight countdown: -{}]", hash, dist)
                     }
                     _ => {}
                 }

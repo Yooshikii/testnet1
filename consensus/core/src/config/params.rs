@@ -1,7 +1,7 @@
 pub use super::{
-    bps::{Bps, TenBps},
+    bps::{Bps, OneBps},
     constants::consensus::*,
-    genesis::{GenesisBlock, GENESIS, SIMNET_GENESIS, TESTNET11_GENESIS, TESTNET_GENESIS},
+    genesis::{GenesisBlock, GENESIS, SIMNET_GENESIS, TESTNET_GENESIS},
 };
 use crate::{
     constants::STORAGE_MASS_PARAMETER,
@@ -138,9 +138,9 @@ impl<T: Copy + Ord> ForkedParam<T> {
     }
 }
 
-/// Fork params for the Crescendo hardfork
+/// Fork params for the Starlight hardfork
 #[derive(Clone, Debug)]
-pub struct CrescendoParams {
+pub struct StarLightParams {
     pub past_median_time_sampled_window_size: u64,
     pub sampled_difficulty_window_size: u64,
 
@@ -165,32 +165,26 @@ pub struct CrescendoParams {
     pub coinbase_maturity: u64,
 }
 
-pub const CRESCENDO: CrescendoParams = CrescendoParams {
+pub const STARLIGHT: StarLightParams = StarLightParams {
     past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
     sampled_difficulty_window_size: DIFFICULTY_SAMPLED_WINDOW_SIZE,
 
     //
     // ~~~~~~~~~~~~~~~~~~ BPS dependent constants ~~~~~~~~~~~~~~~~~~
     //
-    target_time_per_block: TenBps::target_time_per_block(),
-    ghostdag_k: TenBps::ghostdag_k(),
-    past_median_time_sample_rate: TenBps::past_median_time_sample_rate(),
-    difficulty_sample_rate: TenBps::difficulty_adjustment_sample_rate(),
-    max_block_parents: TenBps::max_block_parents(),
-    mergeset_size_limit: TenBps::mergeset_size_limit(),
-    merge_depth: TenBps::merge_depth_bound(),
-    finality_depth: TenBps::finality_depth(),
-    pruning_depth: TenBps::pruning_depth(),
-
-    coinbase_maturity: TenBps::coinbase_maturity(),
-
-    // Limit the cost of calculating compute/transient/storage masses
+    target_time_per_block: OneBps::target_time_per_block(),
+    ghostdag_k: OneBps::ghostdag_k(),
+    past_median_time_sample_rate: OneBps::past_median_time_sample_rate(),
+    difficulty_sample_rate: OneBps::difficulty_adjustment_sample_rate(),
+    max_block_parents: OneBps::max_block_parents(),
+    mergeset_size_limit: OneBps::mergeset_size_limit(),
+    merge_depth: OneBps::merge_depth_bound(),
+    finality_depth: OneBps::finality_depth(),
+    pruning_depth: OneBps::pruning_depth(),
+    coinbase_maturity: OneBps::coinbase_maturity(),
     max_tx_inputs: 1000,
     max_tx_outputs: 1000,
-    // Transient mass enforces a limit of 125Kb, however script engine max scripts size is 10Kb so there's no point in surpassing that.
     max_signature_script_len: 10_000,
-    // Compute mass enforces a limit of ~45.5Kb, however script engine max scripts size is 10Kb so there's no point in surpassing that.
-    // Note that storage mass will kick in and gradually penalize also for lower lengths (generalized KIP-0009, plurality will be high).
     max_script_public_key_len: 10_000,
 };
 
@@ -253,8 +247,8 @@ pub struct Params {
     pub max_block_level: BlockLevel,
     pub pruning_proof_m: u64,
 
-    pub crescendo: CrescendoParams,
-    pub crescendo_activation: ForkActivation,
+    pub starlight: StarLightParams,
+    pub starlight_activation: ForkActivation,
 }
 
 impl Params {
@@ -269,7 +263,7 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn sampled_past_median_time_window_size(&self) -> usize {
-        self.crescendo.past_median_time_sampled_window_size as usize
+        self.starlight.past_median_time_sampled_window_size as usize
     }
 
     /// Returns the size of the blocks window that is inspected to calculate the past median time.
@@ -279,7 +273,7 @@ impl Params {
         ForkedParam::new(
             self.prior_past_median_time_window_size(),
             self.sampled_past_median_time_window_size(),
-            self.crescendo_activation,
+            self.starlight_activation,
         )
     }
 
@@ -287,7 +281,7 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn past_median_time_sample_rate(&self) -> ForkedParam<u64> {
-        ForkedParam::new(1, self.crescendo.past_median_time_sample_rate, self.crescendo_activation)
+        ForkedParam::new(1, self.starlight.past_median_time_sample_rate, self.starlight_activation)
     }
 
     /// Returns the size of the blocks window that is inspected to calculate the difficulty
@@ -296,8 +290,8 @@ impl Params {
     pub fn difficulty_window_size(&self) -> ForkedParam<usize> {
         ForkedParam::new(
             self.prior_difficulty_window_size,
-            self.crescendo.sampled_difficulty_window_size as usize,
-            self.crescendo_activation,
+            self.starlight.sampled_difficulty_window_size as usize,
+            self.starlight_activation,
         )
     }
 
@@ -305,14 +299,14 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn difficulty_sample_rate(&self) -> ForkedParam<u64> {
-        ForkedParam::new(1, self.crescendo.difficulty_sample_rate, self.crescendo_activation)
+        ForkedParam::new(1, self.starlight.difficulty_sample_rate, self.starlight_activation)
     }
 
     /// Returns the target time per block
     #[inline]
     #[must_use]
     pub fn target_time_per_block(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_target_time_per_block, self.crescendo.target_time_per_block, self.crescendo_activation)
+        ForkedParam::new(self.prior_target_time_per_block, self.starlight.target_time_per_block, self.starlight_activation)
     }
 
     /// Returns the expected number of blocks per second
@@ -321,62 +315,62 @@ impl Params {
     pub fn bps(&self) -> ForkedParam<u64> {
         ForkedParam::new(
             1000 / self.prior_target_time_per_block,
-            1000 / self.crescendo.target_time_per_block,
-            self.crescendo_activation,
+            1000 / self.starlight.target_time_per_block,
+            self.starlight_activation,
         )
     }
 
     pub fn ghostdag_k(&self) -> ForkedParam<KType> {
-        ForkedParam::new(self.prior_ghostdag_k, self.crescendo.ghostdag_k, self.crescendo_activation)
+        ForkedParam::new(self.prior_ghostdag_k, self.starlight.ghostdag_k, self.starlight_activation)
     }
 
     pub fn max_block_parents(&self) -> ForkedParam<u8> {
-        ForkedParam::new(self.prior_max_block_parents, self.crescendo.max_block_parents, self.crescendo_activation)
+        ForkedParam::new(self.prior_max_block_parents, self.starlight.max_block_parents, self.starlight_activation)
     }
 
     pub fn mergeset_size_limit(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_mergeset_size_limit, self.crescendo.mergeset_size_limit, self.crescendo_activation)
+        ForkedParam::new(self.prior_mergeset_size_limit, self.starlight.mergeset_size_limit, self.starlight_activation)
     }
 
     pub fn merge_depth(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_merge_depth, self.crescendo.merge_depth, self.crescendo_activation)
+        ForkedParam::new(self.prior_merge_depth, self.starlight.merge_depth, self.starlight_activation)
     }
 
     pub fn finality_depth(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_finality_depth, self.crescendo.finality_depth, self.crescendo_activation)
+        ForkedParam::new(self.prior_finality_depth, self.starlight.finality_depth, self.starlight_activation)
     }
 
     pub fn pruning_depth(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_pruning_depth, self.crescendo.pruning_depth, self.crescendo_activation)
+        ForkedParam::new(self.prior_pruning_depth, self.starlight.pruning_depth, self.starlight_activation)
     }
 
     pub fn coinbase_maturity(&self) -> ForkedParam<u64> {
-        ForkedParam::new(self.prior_coinbase_maturity, self.crescendo.coinbase_maturity, self.crescendo_activation)
+        ForkedParam::new(self.prior_coinbase_maturity, self.starlight.coinbase_maturity, self.starlight_activation)
     }
 
     pub fn finality_duration_in_milliseconds(&self) -> ForkedParam<u64> {
         ForkedParam::new(
             self.prior_target_time_per_block * self.prior_finality_depth,
-            self.crescendo.target_time_per_block * self.crescendo.finality_depth,
-            self.crescendo_activation,
+            self.starlight.target_time_per_block * self.starlight.finality_depth,
+            self.starlight_activation,
         )
     }
 
     pub fn difficulty_window_duration_in_block_units(&self) -> ForkedParam<u64> {
         ForkedParam::new(
             self.prior_difficulty_window_size as u64,
-            self.crescendo.difficulty_sample_rate * self.crescendo.sampled_difficulty_window_size,
-            self.crescendo_activation,
+            self.starlight.difficulty_sample_rate * self.starlight.sampled_difficulty_window_size,
+            self.starlight_activation,
         )
     }
 
     pub fn expected_difficulty_window_duration_in_milliseconds(&self) -> ForkedParam<u64> {
         ForkedParam::new(
             self.prior_target_time_per_block * self.prior_difficulty_window_size as u64,
-            self.crescendo.target_time_per_block
-                * self.crescendo.difficulty_sample_rate
-                * self.crescendo.sampled_difficulty_window_size,
-            self.crescendo_activation,
+            self.starlight.target_time_per_block
+                * self.starlight.difficulty_sample_rate
+                * self.starlight.sampled_difficulty_window_size,
+            self.starlight_activation,
         )
     }
 
@@ -388,10 +382,10 @@ impl Params {
             + 2 * self.prior_ghostdag_k as u64
             + 2;
 
-        let new_anticone_finalization_depth = self.crescendo.finality_depth
-            + self.crescendo.merge_depth
-            + 4 * self.crescendo.mergeset_size_limit * self.crescendo.ghostdag_k as u64
-            + 2 * self.crescendo.ghostdag_k as u64
+        let new_anticone_finalization_depth = self.starlight.finality_depth
+            + self.starlight.merge_depth
+            + 4 * self.starlight.mergeset_size_limit * self.starlight.ghostdag_k as u64
+            + 2 * self.starlight.ghostdag_k as u64
             + 2;
 
         // In mainnet it's guaranteed that `self.pruning_depth` is greater
@@ -401,25 +395,25 @@ impl Params {
         // not finalized.
         ForkedParam::new(
             min(self.prior_pruning_depth, prior_anticone_finalization_depth),
-            min(self.crescendo.pruning_depth, new_anticone_finalization_depth),
-            self.crescendo_activation,
+            min(self.starlight.pruning_depth, new_anticone_finalization_depth),
+            self.starlight_activation,
         )
     }
 
     pub fn max_tx_inputs(&self) -> ForkedParam<usize> {
-        ForkedParam::new(self.prior_max_tx_inputs, self.crescendo.max_tx_inputs, self.crescendo_activation)
+        ForkedParam::new(self.prior_max_tx_inputs, self.starlight.max_tx_inputs, self.starlight_activation)
     }
 
     pub fn max_tx_outputs(&self) -> ForkedParam<usize> {
-        ForkedParam::new(self.prior_max_tx_outputs, self.crescendo.max_tx_outputs, self.crescendo_activation)
+        ForkedParam::new(self.prior_max_tx_outputs, self.starlight.max_tx_outputs, self.starlight_activation)
     }
 
     pub fn max_signature_script_len(&self) -> ForkedParam<usize> {
-        ForkedParam::new(self.prior_max_signature_script_len, self.crescendo.max_signature_script_len, self.crescendo_activation)
+        ForkedParam::new(self.prior_max_signature_script_len, self.starlight.max_signature_script_len, self.starlight_activation)
     }
 
     pub fn max_script_public_key_len(&self) -> ForkedParam<usize> {
-        ForkedParam::new(self.prior_max_script_public_key_len, self.crescendo.max_script_public_key_len, self.crescendo_activation)
+        ForkedParam::new(self.prior_max_script_public_key_len, self.starlight.max_script_public_key_len, self.starlight_activation)
     }
 
     pub fn network_name(&self) -> String {
@@ -453,11 +447,7 @@ impl From<NetworkId> for Params {
     fn from(value: NetworkId) -> Self {
         match value.network_type {
             NetworkType::Mainnet => MAINNET_PARAMS,
-            NetworkType::Testnet => match value.suffix {
-                Some(10) => TESTNET_PARAMS,
-                Some(x) => panic!("Testnet suffix {} is not supported", x),
-                None => panic!("Testnet suffix not provided"),
-            },
+            NetworkType::Testnet => TESTNET_PARAMS,
             NetworkType::Simnet => SIMNET_PARAMS,
         }
     }
@@ -467,46 +457,49 @@ pub const MAINNET_PARAMS: Params = Params {
     peers: &["209.74.87.79:7111","89.162.126.80:7111"],
     net: NetworkId::new(NetworkType::Mainnet),
     genesis: GENESIS,
-    prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
     timestamp_deviation_tolerance: TIMESTAMP_DEVIATION_TOLERANCE,
-    prior_target_time_per_block: 1000,
     max_difficulty_target: MAX_DIFFICULTY_TARGET,
     max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
     prior_difficulty_window_size: LEGACY_DIFFICULTY_WINDOW_SIZE,
     min_difficulty_window_size: MIN_DIFFICULTY_WINDOW_SIZE,
-    prior_max_block_parents: 10,
-    prior_mergeset_size_limit: (LEGACY_DEFAULT_GHOSTDAG_K as u64) * 10,
-    prior_merge_depth: 3600,
-    prior_finality_depth: 86400,
-    prior_pruning_depth: 185798,
+
+    //
+    // ~~~~~~~~~~~~~~~~~~ BPS dependent constants ~~~~~~~~~~~~~~~~~~
+    //
+    prior_ghostdag_k: OneBps::ghostdag_k(),
+    prior_target_time_per_block: OneBps::target_time_per_block(),
+    prior_max_block_parents: if OneBps::max_block_parents() > 64 { OneBps::max_block_parents() } else { 64 },
+    prior_mergeset_size_limit: OneBps::mergeset_size_limit(),
+    prior_merge_depth: OneBps::merge_depth_bound(),
+    prior_finality_depth: OneBps::finality_depth(),
+    prior_pruning_depth: OneBps::pruning_depth(),
+    prior_coinbase_maturity: OneBps::coinbase_maturity(),
+
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
-    prior_max_tx_inputs: 1_000_000_000,
-    prior_max_tx_outputs: 1_000_000_000,
-    prior_max_signature_script_len: 1_000_000_000,
-    prior_max_script_public_key_len: 1_000_000_000,
-
+    prior_max_tx_inputs: 1000,
+    prior_max_tx_outputs: 1000,
+    prior_max_signature_script_len: 10_000,
+    prior_max_script_public_key_len: 10_000,
     mass_per_tx_byte: 1,
     mass_per_script_pub_key_byte: 10,
     mass_per_sig_op: 1000,
     max_block_mass: 500_000,
-
-    storage_mass_parameter: STORAGE_MASS_PARAMETER,
     premine_daa_score: 1,
-    premine_phase_base_subsidy: 1500000000000000, // 15,000,000 premine
-    prior_coinbase_maturity: 100,
+    premine_phase_base_subsidy: 1500000000000000,
+    storage_mass_parameter: STORAGE_MASS_PARAMETER,
     skip_proof_of_work: false,
-    max_block_level: 225,
-    pruning_proof_m: 1000,
+    max_block_level: 250,
+    pruning_proof_m: PRUNING_PROOF_M,
 
-    crescendo: CRESCENDO,
-    crescendo_activation: ForkActivation::never(),
+    starlight: STARLIGHT,
+    starlight_activation: ForkActivation::always(),
 };
 
 pub const TESTNET_PARAMS: Params = Params {
     peers: &[
     ],
-    net: NetworkId::with_suffix(NetworkType::Testnet, 10),
+    net: NetworkId::new(NetworkType::Testnet),
     genesis: TESTNET_GENESIS,
     prior_ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
     timestamp_deviation_tolerance: TIMESTAMP_DEVIATION_TOLERANCE,
@@ -522,11 +515,6 @@ pub const TESTNET_PARAMS: Params = Params {
     prior_pruning_depth: 185798,
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
-
-    // This is technically a soft fork from the Go implementation since vecnod's consensus doesn't
-    // check these rules, but in practice it's enforced by the network layer that limits the message
-    // size to 1 GB.
-    // These values should be lowered to more reasonable amounts on the next planned HF/SF.
     prior_max_tx_inputs: 1_000_000_000,
     prior_max_tx_outputs: 1_000_000_000,
     prior_max_signature_script_len: 1_000_000_000,
@@ -538,12 +526,6 @@ pub const TESTNET_PARAMS: Params = Params {
     max_block_mass: 500_000,
 
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    // premine_daa_score is the DAA score after which the pre-deflationary period
-    // switches to the deflationary period. This number is calculated as follows:
-    // We define a year as 365.25 days
-    // Half a year in seconds = 365.25 / 2 * 24 * 60 * 60 = 15778800
-    // The network was down for three days shortly after launch
-    // Three days in seconds = 3 * 24 * 60 * 60 = 259200
     premine_daa_score: 1,
     premine_phase_base_subsidy: 1500000000000000,
     prior_coinbase_maturity: 100,
@@ -551,8 +533,8 @@ pub const TESTNET_PARAMS: Params = Params {
     max_block_level: 250,
     pruning_proof_m: 1000,
 
-    crescendo: CRESCENDO,
-    crescendo_activation: ForkActivation::always(),
+    starlight: STARLIGHT,
+    starlight_activation: ForkActivation::always(),
 };
 
 pub const SIMNET_PARAMS: Params = Params {
@@ -569,37 +551,32 @@ pub const SIMNET_PARAMS: Params = Params {
     // ~~~~~~~~~~~~~~~~~~ BPS dependent constants ~~~~~~~~~~~~~~~~~~
     //
     // Note we use a 10 BPS configuration for simnet
-    prior_ghostdag_k: TenBps::ghostdag_k(),
-    prior_target_time_per_block: TenBps::target_time_per_block(),
-    // For simnet, we deviate from TN11 configuration and allow at least 64 parents in order to support mempool benchmarks out of the box
-    prior_max_block_parents: if TenBps::max_block_parents() > 64 { TenBps::max_block_parents() } else { 64 },
-    prior_mergeset_size_limit: TenBps::mergeset_size_limit(),
-    prior_merge_depth: TenBps::merge_depth_bound(),
-    prior_finality_depth: TenBps::finality_depth(),
-    prior_pruning_depth: TenBps::pruning_depth(),
-    premine_daa_score: TenBps::premine_daa_score(),
-    premine_phase_base_subsidy: TenBps::premine_phase_base_subsidy(),
-    prior_coinbase_maturity: TenBps::coinbase_maturity(),
+    prior_ghostdag_k: OneBps::ghostdag_k(),
+    prior_target_time_per_block: OneBps::target_time_per_block(),
+    prior_max_block_parents: if OneBps::max_block_parents() > 64 { OneBps::max_block_parents() } else { 64 },
+    prior_mergeset_size_limit: OneBps::mergeset_size_limit(),
+    prior_merge_depth: OneBps::merge_depth_bound(),
+    prior_finality_depth: OneBps::finality_depth(),
+    prior_pruning_depth: OneBps::pruning_depth(),
+    prior_coinbase_maturity: OneBps::coinbase_maturity(),
 
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
-
-    prior_max_tx_inputs: 10_000,
-    prior_max_tx_outputs: 10_000,
-    prior_max_signature_script_len: 1_000_000,
-    prior_max_script_public_key_len: 1_000_000,
-
+    prior_max_tx_inputs: 1000,
+    prior_max_tx_outputs: 1000,
+    prior_max_signature_script_len: 10_000,
+    prior_max_script_public_key_len: 10_000,
     mass_per_tx_byte: 1,
     mass_per_script_pub_key_byte: 10,
     mass_per_sig_op: 1000,
     max_block_mass: 500_000,
-
+    premine_daa_score: 1,
+    premine_phase_base_subsidy: 1500000000000000,
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-
     skip_proof_of_work: true, // For simnet only, PoW can be simulated by default
     max_block_level: 250,
     pruning_proof_m: PRUNING_PROOF_M,
 
-    crescendo: CRESCENDO,
-    crescendo_activation: ForkActivation::always(),
+    starlight: STARLIGHT,
+    starlight_activation: ForkActivation::always(),
 };

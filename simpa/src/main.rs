@@ -13,7 +13,7 @@ use vecno_consensus::{
         headers::HeaderStoreReader,
         relations::RelationsStoreReader,
     },
-    params::{ForkActivation, Params, TenBps, NETWORK_DELAY_BOUND, SIMNET_PARAMS},
+    params::{ForkActivation, Params, OneBps, NETWORK_DELAY_BOUND, SIMNET_PARAMS},
 };
 use vecno_consensus_core::{
     api::ConsensusApi, block::Block, blockstatus::BlockStatus, config::bps::calculate_ghostdag_k, errors::block::BlockProcessResult,
@@ -191,10 +191,10 @@ fn main_impl(mut args: Args) {
             args.miners
         );
     }
-    args.bps = if args.testnet11 { TenBps::bps() as f64 } else { args.bps };
+    args.bps = if args.testnet11 { OneBps::bps() as f64 } else { args.bps };
     let mut params = SIMNET_PARAMS;
-    params.crescendo_activation = ForkActivation::always();
-    params.crescendo.coinbase_maturity = 200;
+    params.starlight_activation = ForkActivation::always();
+    params.starlight.coinbase_maturity = 100;
     params.storage_mass_parameter = 10_000;
     let mut builder = ConfigBuilder::new(params)
         .apply_args(|config| apply_args_to_consensus_params(&args, &mut config.params))
@@ -351,27 +351,27 @@ fn apply_args_to_consensus_params(args: &Args, params: &mut Params) {
 
         if args.daa_legacy {
             // Scale DAA and median-time windows linearly with BPS
-            params.crescendo_activation = ForkActivation::never();
+            params.starlight_activation = ForkActivation::never();
             params.timestamp_deviation_tolerance = (params.timestamp_deviation_tolerance as f64 * args.bps) as u64;
             params.prior_difficulty_window_size = (params.prior_difficulty_window_size as f64 * args.bps) as usize;
         } else {
             // Use the new sampling algorithms
-            params.crescendo_activation = ForkActivation::always();
+            params.starlight_activation = ForkActivation::always();
             params.timestamp_deviation_tolerance = (600.0 * args.bps) as u64;
-            params.crescendo.past_median_time_sample_rate = (10.0 * args.bps) as u64;
-            params.crescendo.difficulty_sample_rate = (2.0 * args.bps) as u64;
+            params.starlight.past_median_time_sample_rate = (10.0 * args.bps) as u64;
+            params.starlight.difficulty_sample_rate = (2.0 * args.bps) as u64;
         }
 
         info!("2Dλ={}, GHOSTDAG K={}, DAA window size={}", 2.0 * args.delay * args.bps, k, params.difficulty_window_size().before());
     }
     if args.test_pruning {
-        params.crescendo_activation = ForkActivation::new(1250.min(args.target_blocks.map(|x| x / 2).unwrap_or(900)));
+        params.starlight_activation = ForkActivation::new(1250.min(args.target_blocks.map(|x| x / 2).unwrap_or(900)));
 
         params.pruning_proof_m = 16;
         params.min_difficulty_window_size = 16;
         params.prior_difficulty_window_size = 64;
         params.timestamp_deviation_tolerance = 16;
-        params.crescendo.sampled_difficulty_window_size = params.crescendo.sampled_difficulty_window_size.min(32);
+        params.starlight.sampled_difficulty_window_size = params.starlight.sampled_difficulty_window_size.min(32);
 
         params.prior_ghostdag_k = 10;
         params.prior_finality_depth = 100;
@@ -379,11 +379,11 @@ fn apply_args_to_consensus_params(args: &Args, params: &mut Params) {
         params.prior_mergeset_size_limit = 32;
         params.prior_pruning_depth = 100 * 2 + 50;
 
-        params.crescendo.ghostdag_k = 20;
-        params.crescendo.finality_depth = 100 * 2;
-        params.crescendo.merge_depth = 64 * 2;
-        params.crescendo.mergeset_size_limit = 32 * 2;
-        params.crescendo.pruning_depth = 100 * 2 * 2 + 50;
+        params.starlight.ghostdag_k = 20;
+        params.starlight.finality_depth = 100 * 2;
+        params.starlight.merge_depth = 64 * 2;
+        params.starlight.mergeset_size_limit = 32 * 2;
+        params.starlight.pruning_depth = 100 * 2 * 2 + 50;
 
         info!("Setting pruning depth to {:?}", params.pruning_depth());
     }

@@ -20,8 +20,8 @@ pub fn calculate_ghostdag_k(x: f64, delta: f64) -> u64 {
     }
 }
 
-/// Bps-related constants generator for 1-bps networks
-pub type TenBps = Bps<1>;
+/// Bps-related constants generator for 10-bps networks
+pub type OneBps = Bps<1>;
 
 /// Struct representing network blocks-per-second. Provides a bunch of const functions
 /// computing various constants which are functions of the BPS value
@@ -123,14 +123,6 @@ impl<const BPS: u64> Bps<BPS> {
         BPS * LEGACY_COINBASE_MATURITY
     }
 
-    /// DAA score after which the pre-deflationary period switches to the deflationary period.
-    ///
-    /// This number is calculated as follows:
-    ///
-    /// - We define a year as 365.25 days
-    /// - Half a year in seconds = 365.25 / 2 * 24 * 60 * 60 = 15778800
-    /// - The network was down for three days shortly after launch
-    /// - Three days in seconds = 3 * 24 * 60 * 60 = 259200
     pub const fn premine_daa_score() -> u64 {
         BPS
     }
