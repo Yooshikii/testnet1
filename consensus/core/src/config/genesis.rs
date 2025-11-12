@@ -187,7 +187,7 @@ mod tests {
     }
 
     #[test]
-    fn gen_testnet11_genesis() {
+    fn gen_testnet_genesis() {
         let bps = OneBps::bps();
         let mut genesis = TESTNET_GENESIS;
         let target = vecno_math::Uint256::from_compact_target_bits(genesis.bits);
@@ -195,7 +195,7 @@ mod tests {
         let scaled_bits = scaled_target.compact_target_bits();
         genesis.bits = scaled_bits;
         if genesis.bits != TESTNET_GENESIS.bits {
-            panic!("Testnet 11: new bits: {}\nnew hash: {:#04x?}", scaled_bits, Block::from(&genesis).hash().as_bytes());
+            panic!("Testnet: new bits: {}\nnew hash: {:#04x?}", scaled_bits, Block::from(&genesis).hash().as_bytes());
         }
     }
 

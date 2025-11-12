@@ -513,6 +513,18 @@ impl ConsensusApi for Consensus {
         Ok(())
     }
 
+    fn calc_block_subsidy(&self, daa_score: u64) -> u64 {
+        self.services.coinbase_manager.calc_block_subsidy(daa_score)
+    }
+
+    fn premine_daa_score(&self) -> u64 {
+        self.config.params.premine_daa_score
+    }
+
+    fn subsidy_month(&self, daa_score: u64) -> u64 {
+        self.services.coinbase_manager.subsidy_month(daa_score)
+    }
+
     fn validate_mempool_transactions_in_parallel(
         &self,
         transactions: &mut [MutableTransaction],

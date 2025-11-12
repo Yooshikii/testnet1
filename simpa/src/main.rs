@@ -104,9 +104,9 @@ struct Args {
     #[arg(long, default_value_t = false)]
     daa_legacy: bool,
 
-    /// Use testnet-11 consensus params
+    /// Use testnet consensus params
     #[arg(long, default_value_t = false)]
-    testnet11: bool,
+    testnet: bool,
     /// Enable performance metrics: cpu, memory, disk io usage
     #[arg(long, default_value_t = false)]
     perf_metrics: bool,
@@ -191,7 +191,7 @@ fn main_impl(mut args: Args) {
             args.miners
         );
     }
-    args.bps = if args.testnet11 { OneBps::bps() as f64 } else { args.bps };
+    args.bps = if args.testnet { OneBps::bps() as f64 } else { args.bps };
     let mut params = SIMNET_PARAMS;
     params.starlight_activation = ForkActivation::always();
     params.starlight.coinbase_maturity = 100;
@@ -331,9 +331,9 @@ fn apply_args_to_consensus_params(args: &Args, params: &mut Params) {
     // however we avoid the actual max since it is reserved for the DB prefix scheme
     params.max_block_level = BlockLevel::MAX - 1;
     params.genesis.timestamp = 0;
-    if args.testnet11 {
+    if args.testnet {
         info!(
-            "Using vecno-testnet-11 configuration (GHOSTDAG K={}, DAA window size={}, Median time window size={})",
+            "Using vecno-testnet configuration (GHOSTDAG K={}, DAA window size={}, Median time window size={})",
             params.ghostdag_k().before(),
             params.difficulty_window_size().before(),
             params.past_median_time_window_size().before(),

@@ -468,7 +468,7 @@ pub const MAINNET_PARAMS: Params = Params {
     //
     prior_ghostdag_k: OneBps::ghostdag_k(),
     prior_target_time_per_block: OneBps::target_time_per_block(),
-    prior_max_block_parents: if OneBps::max_block_parents() > 64 { OneBps::max_block_parents() } else { 64 },
+    prior_max_block_parents: OneBps::max_block_parents(),
     prior_mergeset_size_limit: OneBps::mergeset_size_limit(),
     prior_merge_depth: OneBps::merge_depth_bound(),
     prior_finality_depth: OneBps::finality_depth(),
@@ -573,7 +573,7 @@ pub const SIMNET_PARAMS: Params = Params {
     premine_daa_score: 1,
     premine_phase_base_subsidy: 1500000000000000,
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    skip_proof_of_work: true, // For simnet only, PoW can be simulated by default
+    skip_proof_of_work: true,
     max_block_level: 250,
     pruning_proof_m: PRUNING_PROOF_M,
 

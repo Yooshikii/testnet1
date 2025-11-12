@@ -123,7 +123,7 @@ mod test {
         };
         let import_secret = Secret::new(vec![]);
 
-        let acc = wallet.import_vecnoawallet_golang_multisig_v1(&import_secret, &wallet_secret, file).await.unwrap();
+        let acc = wallet.import_vecnowallet_golang_multisig_v1(&import_secret, &wallet_secret, file).await.unwrap();
         assert_eq!(
             acc.receive_address().unwrap(),
             Address::try_from("vecno:pqvgkyjeuxmd8k70egrrzpdz5rqj0acmr6y94mwsltxfp6nc50742295c3998").unwrap(), // taken from golang impl

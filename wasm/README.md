@@ -169,7 +169,7 @@ let {
 const rpc = new RpcClient({
     url: "127.0.0.1", 
     encoding: Encoding.Borsh, 
-    network : "testnet-10"
+    network : "testnet"
 });
 
 (async () => {

@@ -60,6 +60,7 @@ pub trait ConsensusApi: Send + Sync {
     fn validate_and_insert_block(&self, block: Block) -> BlockValidationFutures {
         unimplemented!()
     }
+    
 
     fn validate_and_insert_trusted_block(&self, tb: TrustedBlock) -> BlockValidationFutures {
         unimplemented!()
@@ -207,6 +208,18 @@ pub trait ConsensusApi: Send + Sync {
     fn modify_coinbase_payload(&self, payload: Vec<u8>, miner_data: &MinerData) -> CoinbaseResult<Vec<u8>> {
         unimplemented!()
     }
+
+     fn calc_block_subsidy(&self, daa_score: u64) -> u64 {
+         unimplemented!()
+     }
+ 
+     fn premine_daa_score(&self) -> u64 {
+         unimplemented!()
+     }
+
+     fn subsidy_month(&self, daa_score: u64) -> u64 {
+         unimplemented!()
+     }
 
     fn calc_transaction_hash_merkle_root(&self, txs: &[Transaction], pov_daa_score: u64) -> Hash {
         unimplemented!()

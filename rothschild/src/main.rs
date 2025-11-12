@@ -4,7 +4,7 @@ use clap::{Arg, ArgAction, Command};
 use itertools::Itertools;
 use vecno_addresses::{Address, Prefix, Version};
 use vecno_consensus_core::{
-    config::params::TESTNET_PARAMS,
+    network::NetworkType,
     constants::{VENI_PER_VECNO, TX_VERSION},
     sign::sign,
     subnets::SUBNETWORK_ID_NATIVE,
@@ -231,9 +231,10 @@ async fn main() {
 
     let info = rpc_client.get_block_dag_info().await.expect("Failed to get block dag info.");
 
-    let coinbase_maturity = match info.network.suffix {
-        Some(11) => panic!("TN11 is not supported on this version"),
-        None | Some(_) => TESTNET_PARAMS.coinbase_maturity().upper_bound(),
+    let coinbase_maturity = match info.network.network_type {
+        NetworkType::Mainnet => 100,
+        NetworkType::Testnet => 100,
+        NetworkType::Simnet => 100,
     };
     info!(
         "Node block-DAG info: \n\tNetwork: {}, \n\tBlock count: {}, \n\tHeader count: {}, \n\tDifficulty: {}, 

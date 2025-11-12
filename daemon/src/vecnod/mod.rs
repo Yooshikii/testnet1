@@ -95,11 +95,6 @@ impl TryFrom<VecnodConfig> for Vec<String> {
             }
         }
 
-        let netsuffix = network.suffix.map(|suffix| format!("--netsuffix={suffix}"));
-        if let Some(flag) = netsuffix.as_ref() {
-            argv.push(flag);
-        }
-
         if args.utxo_index {
             argv.push("--utxoindex");
         }

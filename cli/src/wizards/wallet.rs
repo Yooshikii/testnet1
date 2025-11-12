@@ -29,7 +29,7 @@ pub(crate) async fn create(
         tprintln!(ctx);
         tprintln!(ctx, "Before creating a wallet, you need to select a Vecno network.");
         tprintln!(ctx, "Please use 'network <name>' command to select a network.");
-        tprintln!(ctx, "Currently available networks are 'mainnet', 'testnet-10' and 'testnet-11'");
+        tprintln!(ctx, "Currently available networks are 'mainnet', 'testnet'");
         tprintln!(ctx);
         return Err(err.into());
     }

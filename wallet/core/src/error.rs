@@ -76,7 +76,7 @@ pub enum Error {
     #[error("Wallet is not connected")]
     NotConnected,
 
-    #[error("No network selected. Please use `network (mainnet|testnet-10|testnet-11)` to select a network.")]
+    #[error("No network selected. Please use `network (mainnet|testnet)` to select a network.")]
     MissingNetworkId,
 
     #[error("RPC client version mismatch, please upgrade you client (needs: v{0}, connected to: v{1})")]
@@ -87,12 +87,6 @@ pub enum Error {
 
     #[error("Invalid network type - expected: {0} connected to: {1}")]
     InvalidNetworkType(String, String),
-
-    #[error("Invalid network suffix '{0}'")]
-    InvalidNetworkSuffix(String),
-
-    #[error("Network suffix is required for network '{0}'")]
-    MissingNetworkSuffix(String),
 
     #[error("Unexpected extra network suffix '{0}'")]
     UnexpectedExtraSuffixToken(String),

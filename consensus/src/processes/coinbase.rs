@@ -71,7 +71,6 @@ impl CoinbaseManager {
     ) -> Self {
         // Precomputed subsidy by month table for the actual block per second rate
         // Here values are rounded up so that we keep the same number of rewarding months as in the original 1 BPS table.
-        // In a 10 BPS network, the induced increase in total rewards is 51 VE (see tests::calc_high_bps_total_rewards_delta())
         let subsidy_by_month_table_before: SubsidyByMonthTable =
             core::array::from_fn(|i| SUBSIDY_BY_MONTH_TABLE[i].div_ceil(bps.before()));
         let subsidy_by_month_table_after: SubsidyByMonthTable =
@@ -244,7 +243,7 @@ impl CoinbaseManager {
     /// Get the subsidy month as function of the current DAA score.
     ///
     /// Note that this function is called only if daa_score >= self.premine_daa_score
-    fn subsidy_month(&self, daa_score: u64) -> u64 {
+    pub fn subsidy_month(&self, daa_score: u64) -> u64 {
         let seconds_since_deflationary_phase_started = if self.starlight_activation_daa_score < self.premine_daa_score {
             // starlight_activation < deflationary_phase <= daa_score (activated before deflation)
             (daa_score - self.premine_daa_score) / self.bps.after()
@@ -441,10 +440,10 @@ mod tests {
 
     #[test]
     fn subsidy_test() {
-        const premine_phase_base_subsidy: u64 = 50000000000;
-        const DEFLATIONARY_PHASE_INITIAL_SUBSIDY: u64 = 44000000000;
+        const PREMINE_PHASE_BASE_SUBSIDY: u64 = 1500000000000000;
+        const DEFLATIONARY_PHASE_INITIAL_SUBSIDY: u64 = 200000000;
         const SECONDS_PER_MONTH: u64 = 2629800;
-        const SECONDS_PER_HALVING: u64 = SECONDS_PER_MONTH * 12;
+        const SECONDS_PER_HALVING: u64 = SECONDS_PER_MONTH * 24;
 
         for network_id in NetworkId::iter() {
             let mut params: Params = network_id.into();
@@ -455,7 +454,7 @@ mod tests {
             let cbm = create_manager(&params);
             let bps = params.bps().before();
 
-            let premine_phase_base_subsidy = premine_phase_base_subsidy / bps;
+            let premine_phase_base_subsidy = PREMINE_PHASE_BASE_SUBSIDY / bps;
             let deflationary_phase_initial_subsidy = DEFLATIONARY_PHASE_INITIAL_SUBSIDY / bps;
             let blocks_per_halving = SECONDS_PER_HALVING * bps;
 
@@ -466,7 +465,11 @@ mod tests {
             }
 
             let tests = vec![
-                Test { name: "first mined block", daa_score: 1, expected: premine_phase_base_subsidy },
+                Test { 
+                    name: "first mined block", 
+                    daa_score: 1, 
+                    expected: premine_phase_base_subsidy 
+                },
                 Test {
                     name: "before deflationary phase",
                     daa_score: params.premine_daa_score - 1,
